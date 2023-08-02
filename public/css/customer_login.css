@@ -31,17 +31,16 @@ header img{
     border-radius: 10px;
 }
 .label1,.label2{
-    padding: 30px;
+    padding: 25px;
     margin: auto 2px;
 }
 .submit{
     border: none;
     padding: 6px 5px;
-    /* background-color: ; */
     cursor: pointer;
     border-radius: 5px;
 }
-footer h1 a{
+footer h2 a{
     color: rgb(228, 226, 226);
 }
 @media (width<426px) {
@@ -52,7 +51,7 @@ footer h1 a{
         padding: 20px;
         margin: auto 2px;
     }
-    footer h1 {
+    footer h2 {
         font-size: 1rem;
     }
 }

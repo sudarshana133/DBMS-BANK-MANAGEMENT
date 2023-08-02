@@ -1,0 +1,37 @@
+body{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 10px;
+    text-align: center;
+    margin: auto;
+    overflow-x: hidden;
+}
+table,th,td{
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 2px;
+}
+.delete{
+    color: red; 
+    display: flex;
+}
+.delete i{
+    color: red; 
+    margin:0px 3px;
+}
+.update{
+    display: flex;
+}
+.update i{
+    margin:0px 3px;
+}
+a.addCustomer:link,a.addCustomer:visited{
+    background-color: lightblue; 
+    width: 100px; 
+    text-align: center;
+    text-decoration: none;
+    color: black;
+    padding: 5px 0px;
+    border-radius: 5px;
+}
