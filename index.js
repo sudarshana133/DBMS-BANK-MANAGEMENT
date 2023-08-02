@@ -74,7 +74,8 @@ app.post("/updateCustomerDetails",(req,res)=>{
     const accId=req.body.accId;
     const address=req.body.address;
     const aadhar=req.body.aadharNumber;
-    var sql = "update customer set firstname=? , lastname=?, aadhar =?, phonenum=?, email=?, accId=?, address=?, aadharNum=? where id=?";
+    const id=req.body.id;
+    var sql = "UPDATE customer SET firstname=?, lastname=?, phonenum =?, email=?, accId=?, address=?,  aadharNum=? where id=?";
     db.query(sql,[fname,lname,phone,email,accId,address,aadhar,id],(err,result)=>{
         if(err) throw err;
         res.redirect("/customers");
