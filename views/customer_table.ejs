@@ -35,21 +35,21 @@
             <th>Account Id</th>
             <th class="hide">Address</th>
             <th>Aadhar Number</th>
-            <!-- <th class="hide">Balance</th>  -->
+            <th class="hide">Balance</th> 
             <th>Delete</th>
             <th>Update</th>
         </tr>
             <% if(customers.length>0){ %>
                 <% for(var i=0;i<customers.length;i++){ %>
                     <tr>
-                        <td><%- customers[i].firstname %></td>
-                        <td class="hide"><%- customers[i].lastname %></td>
-                        <td><%- customers[i].phonenum %></td>
-                        <td class="hide"><%- customers[i].email %></td>
-                        <td><%- customers[i].accId %></td>
-                        <td class="hide"><%- customers[i].address%></td>
-                        <td><%- customers[i].aadharNum%></td>
-                        <!-- <td><% customers[i].balance %></td> -->
+                        <td><%- customers[i].bank_cust_fname %></td>
+                        <td class="hide"><%- customers[i].bank_cust_lname %></td>
+                        <td><%- customers[i].bank_cust_phone %></td>
+                        <td class="hide"><%- customers[i].bank_cust_emailid %></td>
+                        <td><%- customers[i].bank_cust_account_id %></td>
+                        <td class="hide"><%- customers[i].bank_cust_address%></td>
+                        <td><%- customers[i].bank_cust_aadhar%></td>
+                        <td><%- customers[i].bank_cust_balance %></td>
                         <td><a href="/deleteCustomer?id=<%-customers[i].id %>" class="delete" id="delete"><i class="fa-solid fa-trash"></i></a></td>
                         <td><a href="/updateCustomers?id=<%- customers[i].id %>" class="update"><i class="fa-solid fa-pen-to-square"></i></a></td>
                     </tr>

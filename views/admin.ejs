@@ -27,7 +27,7 @@
                 <input type="password" name="password" id="password" autocomplete="off">
             </div>
             <div class="alert">
-                <h4 id="wrongCredentials" style="color: rgba(252, 38, 38, 0.784);"></h4>
+                <h4 id="wrongCredentials" style="color: rgba(252, 38, 38, 0.784);">Wrong User Credentials</h4>
                 <h4 id="ifscCode"></h4>
             </div>
             <div class="label3">
@@ -40,9 +40,10 @@
         const ifsc = document.getElementById("ifsc");
         const password = document.getElementById("password");
         const wrongCredentials = document.getElementById("wrongCredentials");
-        wrongCredentials.innerHTML = "";
+        // wrongCredentials.innerHTML = "";
         function handleSubmit()
         {
+            wrongCredentials.innerHTML = "";
             if(userId.value.length===0)
             {
                 wrongCredentials.innerHTML="User ID cannot be empty";
@@ -64,19 +65,18 @@
                 return false;
             }
             
+        }
+        userId.addEventListener("input", function () {
+        wrongCredentials.innerHTML = "";
+        });
 
-            userId.addEventListener("input", function () {
+        ifsc.addEventListener("input", function () {
             wrongCredentials.innerHTML = "";
             });
 
-            ifsc.addEventListener("input", function () {
-                wrongCredentials.innerHTML = "";
-                });
-    
-            password.addEventListener("input", function () {
-                wrongCredentials.innerHTML = "";
-                });
-        }
+        password.addEventListener("input", function () {
+            wrongCredentials.innerHTML = "";
+            });
     </script>
 </body>
 </html>

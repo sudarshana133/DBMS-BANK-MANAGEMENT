@@ -84,7 +84,6 @@ app.post("/customerLogin",(req,res)=>{
 app.post("/updateCustomerDetails",(req,res)=>{
     const fname=req.body.firstName;
     const lname=req.body.lastName;
-    // const dob=req.body.dateOfBirth;
     const phone=req.body.phone;
     const email=req.body.email;
     const accId=req.body.accId;
@@ -97,5 +96,24 @@ app.post("/updateCustomerDetails",(req,res)=>{
         res.redirect("/customers");
     })
 });
-
+app.post("/adminLogin",(req,res)=>{
+    const userId= req.body.userId;
+    const ifsc= req.body.ifsc;
+    const password= req.body.password;
+    var sql= "SELECT * from bank_employee where bank_emp_id=?";
+    db.query(sql,[userId],(err,results)=>{
+        if(err) throw err;
+        if(results[0].bank_emp_password!=password || results[0].bank_emp_branch_ifsc!=ifsc)
+        {
+            res.render("admin",{});
+        }
+        else{
+            var sql1 = "SELECT * FROM bank_customer WHERE bank_cust_branch_ifsc = (SELECT bank_emp_branch_ifsc FROM bank_employee where bank_emp_branch_ifsc=?)";
+            db.query(sql1,[ifsc],(error,result)=>{
+                if(error) throw error;
+                res.render("customer_table",{customers:result});
+            })
+        }
+    })
+})
 app.listen(3000);
