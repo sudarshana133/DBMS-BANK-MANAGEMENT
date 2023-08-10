@@ -3,34 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank Management</title>
+    <title>Vasu Bank</title>
     <link rel="stylesheet" href="css/index.css">
     <link rel="icon" href="images/logo.jpeg" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <div class="logo">
-            <a href="/">
-                <img src="images/logo.jpeg" alt="logo">
-            </a>
-        </div>
-        <div class="links">
-            <div class="about">
-                <a href="/aboutUs">About Us</a>
+        <div class="main">
+            <div class="logo">
+                <a href="/">
+                    <img src="images/logo1.jpeg" alt="logo">
+                </a>
             </div>
-            <div class="lang">
-                <select name="" id="languages">
-                    <option value="english" selected>English</option>
-                    <option value="kannada">Kannada</option>
-                    <option value="hindi">Hindi</option>
-                </select>
+            <div class="bankName">
+                <h2 class="name">Vasu Bank</h2>
             </div>
         </div>
-        <div class="logins">
-                    <a href="/customerLogin" class="home">Customer</a>
-                    <a href="/employee" class="employee">Employee</a>
-                    <a href="/admin" class="admin">Admin</a>
+        <div class="main2">
+            <div class="logins">
+                <a href="/customerLogin" class="home">Customer</a>
+                <a href="/admin" class="admin">Admin</a>
+            </div>
+            <div class="toggle">
+                <input type="checkbox" id="modeToggle">
+                <label for="modeToggle" class="toggle-label"></label>
+            </div>
         </div>
     </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to Vasu Banking!</h1>
+            <p>We're committed to providing exceptional financial services tailored to your needs. Join Vasu Banking today and experience seamless transactions, personalized assistance, and a wide range of innovative products.</p>
+
+            <!-- <a href="/join" class="btn">Join Vasu Banking</a> -->
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="feature">
+            <h2>Exceptional Services</h2>
+            <p>Our dedicated experts are ready to assist you in achieving your financial goals. We foster lasting relationships built on trust and transparency.</p>
+        </div>
+        <div class="feature">
+            <h2>Flexible Options</h2>
+            <p>Manage your savings, plan for the future, or secure loans with competitive rates and flexible options. Embrace a seamless digital banking experience that puts you in control.</p>
+        </div>
+        <div class="feature">
+            <h2>Empowerment Through Technology</h2>
+            <p>Unlock a world of possibilities with our cutting-edge technology and personalized services. Your financial well-being is at the heart of everything we do.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 Vasu Bank. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const modeToggle = document.getElementById("modeToggle");
+
+modeToggle.addEventListener("change", () => {
+    if (modeToggle.checked) {
+        document.documentElement.classList.add("dark");
+        document.documentElement.classList.remove("light");
+    } else {
+        document.documentElement.classList.add("light");
+        document.documentElement.classList.remove("dark");
+    }
+});
+
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme) {
+    document.documentElement.classList.add(savedTheme);
+    modeToggle.checked = savedTheme === "dark";
+}
+
+    </script>
 </body>
 </html>

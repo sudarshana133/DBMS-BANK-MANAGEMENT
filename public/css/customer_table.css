@@ -1,3 +1,11 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+::placeholder
+{
+    text-align: center;
+}
 body{
     display: flex;
     justify-content: center;
@@ -6,14 +14,21 @@ body{
     text-align: center;
     margin: auto;
     overflow-x: hidden;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
 }
 table,th,td{
-    border: 1px solid black;
+    border: 1px solid rgb(221, 221, 221);
     border-collapse: collapse;
     padding: 2px;
 }
+.search{
+    margin: auto;
+    flex-direction: column;
+}
 .delete{
-    color: red; 
+    color: red;
     display: flex;
 }
 .delete i{
@@ -27,11 +42,45 @@ table,th,td{
     margin:0px 3px;
 }
 a.addCustomer:link,a.addCustomer:visited{
+    position: relative;
+    top: 150px;
     background-color: lightblue; 
-    width: 100px; 
+    width: 150px; 
     text-align: center;
     text-decoration: none;
     color: black;
     padding: 5px 0px;
     border-radius: 5px;
+    margin: 0px auto;
+    font-weight: 800;
+}
+.info
+{
+    display: none;
+}
+@media (width<550px) {
+    .hide{
+        display: none;
+    }
+    .info
+    {
+        display:block;
+    }
+}
+input{
+    border: 1px solid black;
+    border-radius: 5px;
+    height: 35px;
+    width: 200px;
+    color: black;
+}
+.button{
+    padding: 3px;
+    position: relative;
+    width: 75px;
+    top: -3px;
+}
+.image a img
+{
+    width: min(40vw,70px);
 }

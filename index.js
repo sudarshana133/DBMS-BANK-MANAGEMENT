@@ -10,14 +10,14 @@ app.get("/",(req,res)=>{
     res.sendFile(__dirname+"/index.html");
 })
 
-app.get("/customers",(req,res)=>{
+app.get("/customers",(req,res)=>
+{
     var sql= "SELECT * FROM customer";
     db.query(sql,(err,result)=>{
         if(err) throw err;
         res.render("customer_table",{customers:result});
     })
 })
-
 app.get("/deleteCustomer",(req,res)=>{
     var id=req.query.id;
     var sql= "Delete from customer where id ='"+id+"'";
@@ -35,6 +35,22 @@ app.get("/updateCustomers",(req,res)=>{
         res.render("update_details",{customers:result});
     })
 })
+app.get("/search-customers",(req,res)=>{
+    var sql= "SELECT * FROM customer";
+    db.query(sql,(err,result)=>{
+        if(err) throw err;
+        res.render("customer_table",{customers:result});
+    });
+});
+
+app.get("/search",(req,res)=>{
+    var accId=req.query.accId;
+    var sql= "SELECT * FROM customer WHERE  accId LIKE '%"+accId+"%'";
+    db.query(sql,(err,result)=>{
+        if(err) throw err;
+        res.render("customer_table",{customers:result});
+    })
+})
 
 app.get("/:links",(req,res)=>{
     const requestedUrl=req.params.links;
@@ -43,7 +59,7 @@ app.get("/:links",(req,res)=>{
     else if(requestedUrl==="customerLogin")
         res.sendFile(__dirname+"/customer_login.html");
     else if(requestedUrl==="signup")
-        res.sendFile(__dirname+"/signup.html");
+        res.sendFile(__dirname+"/signup1.html");
     else if(requestedUrl=='admin')
         res.sendFile(__dirname+"/admin.html");
 })
@@ -80,5 +96,6 @@ app.post("/updateCustomerDetails",(req,res)=>{
         if(err) throw err;
         res.redirect("/customers");
     })
-})
+});
+
 app.listen(3000);

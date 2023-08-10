@@ -5,25 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customers</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/customer_table.css">
+    <link rel="icon" href="images/logo.jpeg" type="image/x-icon">
 </head>
 <body>
-    <% if(customers.length==0){ %>
-        <a href="/signup" class="addCustomer">Add customer</a>
-    <% } %>
+    <div class="container">
+        <div class="alert alert-danger info" style="width: 240px; margin:10px auto;" role="alert">
+            For full table view in desktop 
+        </div>
+        <div class="image">
+            <a href="/"><img src="images/logo1.jpeg" alt="logo"></a>
+        </div>
+    </div>
+    <h3 style="width: 250px; margin: 10px auto;">Search here</h3>
+    <div class="container search">
+        <form action="/search" id="searchForm" method="get">
+            <input type="search" name="accId"  placeholder="Search With Account Id" autocomplete="off">
+            <input type="submit" value="Search" class="btn btn-primary button">
+        </form>
+    </div>
     <h1>Customer Table</h1>
     <table>
         <tr>
             <th>First Name</th>
-            <th>Last Name</th>
-            <!-- <th>Date of Birth</th> -->
+            <th class="hide">Last Name</th>
             <th>Phone Number</th>
-            <th>Email Id</th>
+            <th class="hide">Email Id</th>
             <th>Account Id</th>
-            <th>Address</th>
+            <th class="hide">Address</th>
             <th>Aadhar Number</th>
-            <!-- <th>IFSC</th>
-            <th>Balance</th> -->
+            <!-- <th class="hide">Balance</th>  -->
             <th>Delete</th>
             <th>Update</th>
         </tr>
@@ -31,19 +43,35 @@
                 <% for(var i=0;i<customers.length;i++){ %>
                     <tr>
                         <td><%- customers[i].firstname %></td>
-                        <td><%- customers[i].lastname %></td>
+                        <td class="hide"><%- customers[i].lastname %></td>
                         <td><%- customers[i].phonenum %></td>
-                        <td><%- customers[i].email %></td>
+                        <td class="hide"><%- customers[i].email %></td>
                         <td><%- customers[i].accId %></td>
-                        <td><%- customers[i].address%></td>
+                        <td class="hide"><%- customers[i].address%></td>
                         <td><%- customers[i].aadharNum%></td>
-                        <td><a href="/deleteCustomer?id=<%-customers[i].id %>" class="delete">Delete<i class="fa-solid fa-trash"></i></a></td>
-                        <td><a href="/updateCustomers?id=<%- customers[i].id %>" class="update">Update <i class="fa-solid fa-pen-to-square"></i></a></td>
+                        <!-- <td><% customers[i].balance %></td> -->
+                        <td><a href="/deleteCustomer?id=<%-customers[i].id %>" class="delete" id="delete"><i class="fa-solid fa-trash"></i></a></td>
+                        <td><a href="/updateCustomers?id=<%- customers[i].id %>" class="update"><i class="fa-solid fa-pen-to-square"></i></a></td>
                     </tr>
                 <% } %>
             <% } else{ %>
-                <h3>Customers data list is empty!</h3>
+                <tr>
+                    <td colspan="9">Date not found</td>
+                </tr>
+                    <a href="/signup" class="addCustomer">Add Customer</a>
             <% } %>
     </table>
+    <script>
+        var deleteButtons = document.querySelectorAll(".delete");
+
+        deleteButtons.forEach(function(button) {
+            button.addEventListener("click", function(event) {
+                var confirmation = confirm("Do you really want to delete the customer?");
+                if (!confirmation) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
