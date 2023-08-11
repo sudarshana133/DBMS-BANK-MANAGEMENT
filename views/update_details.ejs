@@ -18,36 +18,31 @@
 
                     <div class="label1">
                         <label for="firstName">First Name</label>
-                        <input type="text" name="firstName" id="firstName" placeholder="Enter first name" value="<%- customers[0].firstname %>">
+                        <input type="text" name="firstName" id="firstName" placeholder="Enter first name" value="<%- customers[0].bank_cust_fname %>">
                     </div>
                     <div class="label2">
                         <label for="lastName">Last Name</label>
-                        <input type="text" name="lastName" id="lastName" value="<%- customers[0].lastname %>">
+                        <input type="text" name="lastName" id="lastName" value="<%- customers[0].bank_cust_lname %>">
                     </div>
-                    <!-- <div class="label3">
-                        <label for="dateOfBirth">Date of birth</label>
-                        <input type="date" name="dateOfBirth" id="dateOfBirth">
-                    </div> -->
                     <div class="label4">
                         <label for="phone">Phone Number</label>
-                        <input type="text" name="phone" id="phone" value="<%- customers[0].phonenum %>">
+                        <input type="text" name="phone" id="phone" value="<%- customers[0].bank_cust_phone %>">
                     </div>
                     <div class="label5">
                         <label for="email">Email Id</label>
-                        <input type="email" name="email" id="email" value="<%- customers[0].email %>">
+                        <input type="email" name="email" id="email" value="<%- customers[0].bank_cust_emailid %>">
                     </div>
                     <div class="label6">
                         <label for="accId">Account Id</label>
-                        <input type="text" name="accId" id="accId" value="<%- customers[0].accId %>">
+                        <input type="text" name="accId" id="accId" value="<%- customers[0].bank_cust_account_id %>">
                     </div>
 
-                    <textarea name="address" id="address" cols="30" rows="10" ><%- customers[0].address %></textarea>
+                    <textarea name="address" id="address" cols="30" rows="10" ><%- customers[0].bank_cust_address %></textarea>
 
                     <div class="label7">
                         <label for="aadharNumber">Aadhar Number</label>
-                        <input type="text" name="aadharNumber" id="aadharNumber" value="<%- customers[0].aadharNum %>">
+                        <input type="text" name="aadharNumber" id="aadharNumber" value="<%- customers[0].bank_cust_aadhar %>">
                     </div>
-                    <!-- <textarea name="branch_loc" id="branch_loc" cols="30" rows="10"></textarea> -->
                     <div class="label5">
                         <input type="submit" value="submit">
                     </div>
