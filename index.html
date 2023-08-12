@@ -64,22 +64,22 @@
 
     <script>
         const modeToggle = document.getElementById("modeToggle");
+        modeToggle.style.display="none";
+        modeToggle.addEventListener("change", () => {
+            if (modeToggle.checked) {
+                document.documentElement.classList.add("dark");
+                document.documentElement.classList.remove("light");
+            } else {
+                document.documentElement.classList.add("light");
+                document.documentElement.classList.remove("dark");
+            }
+        });
 
-modeToggle.addEventListener("change", () => {
-    if (modeToggle.checked) {
-        document.documentElement.classList.add("dark");
-        document.documentElement.classList.remove("light");
-    } else {
-        document.documentElement.classList.add("light");
-        document.documentElement.classList.remove("dark");
-    }
-});
-
-const savedTheme = localStorage.getItem("theme");
-if (savedTheme) {
-    document.documentElement.classList.add(savedTheme);
-    modeToggle.checked = savedTheme === "dark";
-}
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme) {
+            document.documentElement.classList.add(savedTheme);
+            modeToggle.checked = savedTheme === "dark";
+        }
 
     </script>
 </body>

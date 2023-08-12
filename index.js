@@ -12,11 +12,14 @@ app.use(cookieParser());
 app.get("/",(req,res)=>{
     res.sendFile(__dirname+"/index.html");
 })
-
+app.get("/profile",(req,res)=>{
+    res.render("customer_profile");
+})
 app.get("/customers",(req,res)=>
 {
-    var sql= "SELECT * FROM bank_customer";
-    db.query(sql,(err,result)=>{
+    var ifsc = req.cookies.ifsc;
+    var sql= "SELECT * FROM bank_customer, bank_employee WHERE bank_emp_branch_ifsc=bank_cust_branch_ifsc AND bank_emp_branch_ifsc=?";
+    db.query(sql,[ifsc],(err,result)=>{
         if(err) throw err;
         res.render("customer_table",{customers:result});
     })
@@ -29,11 +32,7 @@ app.get("/deleteCustomer",(req,res)=>{
         if(err) throw err;
         else 
         {
-            var sql1= "SELECT * FROM bank_customer, bank_employee WHERE bank_emp_branch_ifsc=bank_cust_branch_ifsc AND bank_emp_branch_ifsc=?";
-            db.query(sql1,[ifsc],(error,result)=>{
-                if(error) throw error;
-                res.render("customer_table",{customers:result});
-            })
+            res.redirect("/customers");
         }
     })
 })
@@ -50,13 +49,12 @@ app.get("/updateCustomers",(req,res)=>{
 app.get("/search",(req,res)=>{
     var accId=req.query.accId;
     const ifsc = req.cookies.ifsc;
-    var sql = "SELECT * FROM bank_customer WHERE bank_cust_ifsc=? AND bank_cust_account_id=?";
+    var sql = "SELECT * FROM bank_customer WHERE bank_cust_branch_ifsc=? AND bank_cust_account_id=?";
     db.query(sql,[ifsc,accId],(err,result)=>{
         if(err) throw err;
         res.render("customer_table",{customers:result});
     })
 })
-
 app.get("/:links",(req,res)=>{
     const requestedUrl=req.params.links;
     if(requestedUrl==="index")
@@ -64,13 +62,13 @@ app.get("/:links",(req,res)=>{
     else if(requestedUrl==="customerLogin")
         res.sendFile(__dirname+"/customer_login.html");
     else if(requestedUrl==="signup")
-        res.sendFile(__dirname+"/signup1.html");
+        res.sendFile(__dirname+"/signup.html");
     else if(requestedUrl=='admin')
         res.sendFile(__dirname+"/admin.html");
 })
 
 
-app.post("/customerLogin",(req,res)=>{
+app.post("/customerSignUp",(req,res)=>{
     const fname=req.body.firstName;
     const lname=req.body.lastName;
     const phone=req.body.phone;
@@ -78,10 +76,10 @@ app.post("/customerLogin",(req,res)=>{
     const accId=req.body.accId;
     const address=req.body.address;
     const aadhar=req.body.aadharNumber;
-        var sql="Insert into customer(firstname,lastname,phonenum,email,accId,address,aadharNum) values(?,?,?,?,?,?,?)";
+        var sql="Insert into bank_customer(bank_cust_fname,bank_cust_lname,bank_cust_phone,bank_cust_emailid,bank_cust_account_id,bank_cust_address,bank_cust_aadhar) values(?,?,?,?,?,?,?)";
         db.query(sql,[fname,lname,phone,email,accId,address,aadhar],(err,result)=>{
             if(err) throw err;
-            res.send("Student successfully registered");
+            res.render("customer_profile");
         })
 })
 
@@ -94,10 +92,18 @@ app.post("/updateCustomerDetails",(req,res)=>{
     const address=req.body.address;
     const aadhar=req.body.aadharNumber;
     const id=req.body.id;
-    var sql = "UPDATE bank_customer SET firstname=?, lastname=?, phonenum =?, email=?, accId=?, address=?,  aadharNum=? where id=?";
+    const ifsc = req.cookies.ifsc;
+    var sql = "UPDATE bank_customer SET bank_cust_fname=?, bank_cust_lname=?, bank_cust_phone =?, bank_cust_emailid=?, bank_cust_account_id=?, bank_cust_address=?,  bank_cust_aadhar=? where bank_cust_account_id=?";
     db.query(sql,[fname,lname,phone,email,accId,address,aadhar,id],(err,result)=>{
         if(err) throw err;
-        res.redirect("/customers");
+        else
+        {
+            var sql1 = "SELECT * FROM bank_customer WHERE bank_cust_branch_ifsc=? order by bank_cust_account_id desc";
+            db.query(sql1,[ifsc],(error,results)=>{
+                if(error) throw error;
+                res.render("customer_table",{customers:results});
+            })
+        }
     })
 });
 app.post("/adminLogin",async(req,res)=>{
@@ -121,5 +127,10 @@ app.post("/adminLogin",async(req,res)=>{
             })
         }
     })
+})
+
+app.post("/customerLogin",(req,res)=>{
+    
+    res.render("customer_profile");
 })
 app.listen(3000);
