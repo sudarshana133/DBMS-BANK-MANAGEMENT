@@ -4,40 +4,84 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/profile.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="shortcut icon" href="images/logo1.jpeg" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <title>Bank Customer Profile</title>
 </head>
 <body>
-  <div class="page-wrapper">
-    <div class="info-container">
-      <div class="personal-info">
-        <h2>Personal Information</h2>
-        <div class="field">
-          <label>Full Name:</label>
-          <span id="full-name">John Doe</span>
-        </div>
-        <div class="field">
-          <label>Date of Birth:</label>
-          <span id="dob">1985-05-15</span>
-        </div>
-        <!-- Other personal details... -->
-      </div>
-      <div class="other-info">
-        <h2>Other Information</h2>
-        <div class="field">
-          <label>Phone:</label>
-          <span id="phone">123-456-7890</span>
-        </div>
-        <div class="field">
-          <label>Email:</label>
-          <span id="email">johndoe@example.com</span>
-        </div>
-        <!-- Other non-personal details... -->
-      </div>
-    </div>
-    <div class="image-container">
-      <!-- <img src="image-placeholder.jpg" alt="Profile Image"> -->
+  <div class="header">
+    <div class="bankLogo">
+      <a href="/"><img src="images/logo1.jpeg" alt="logo"></a>
+      <h1>VASU BANK</h1>
     </div>
   </div>
-  <!-- <script src="script.js"></script> -->
+  <div class="main">
+    <div class="profile-image">
+      <h3>Profile Picture</h3>
+      <img src="images/profilePics/profile1.png" alt="Profile Image">
+    </div>
+    <div class="section2">
+      <div class="personal">
+        <h2>Personal Details</h2>
+          <div class="p1">
+            <p>First Name : </p>
+            <p><%-fname %></p>
+          </div>
+          <div class="p1">
+            <p>Last Name : </p>
+            <p><%- lname %></p>
+          </div>
+          <div class="p1">
+            <p>Phone Number : </p>
+            <p><%- phone %></p>
+          </div>
+          <div class="p1">
+            <p>Email Id : </p>
+            <p><%- email %></p>
+          </div>
+          <div class="p1">
+            <p>Address : </p>
+            <p><%- address %></p>
+          </div>
+      </div>
+      <div class="main2">
+        <h2>Account details : </h2>
+        <div class="p1">
+          <p>Account Id : </p>
+          <p><%- accId %></p>
+        </div>
+        <div class="p1">
+          <p>Aadhar Number :</p>
+          <p><%- aadhar %></p>
+        </div>
+        <div class="p1">
+          <p>Balance : </p>
+          <p><%- Number(balance) %></p>
+        </div>
+      <% if(userInfo==1){ %>
+        <div class="p1">
+          <p>
+            <form action="/creditMoney" method="post" id="credit">
+              Credit
+              <input type="hidden" name="id" value="<%- accId %>">
+              <input type="text" name="money" id="" placeholder="Enter amount" autocomplete="off">
+            </form>
+          </p>
+          <p>
+            <form action="/debitMoney" method="post" id="debit">
+              Debit
+              <input type="hidden" name="id" value="<%- accId %>">
+              <input type="number" name="money" id="" placeholder="Enter amount">
+            </form>
+          </p>
+        </div>
+        <div class="p1">
+          <p><a href="/updateCustomers?id=<%- accId %>" class="update">Update <i class="fa-solid fa-pen-to-square"></i></a></p>
+        </div>
+      <% } %>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

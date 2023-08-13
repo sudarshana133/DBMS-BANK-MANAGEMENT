@@ -12,9 +12,6 @@ app.use(cookieParser());
 app.get("/",(req,res)=>{
     res.sendFile(__dirname+"/index.html");
 })
-app.get("/profile",(req,res)=>{
-    res.render("customer_profile");
-})
 app.get("/customers",(req,res)=>
 {
     var ifsc = req.cookies.ifsc;
@@ -55,6 +52,7 @@ app.get("/search",(req,res)=>{
         res.render("customer_table",{customers:result});
     })
 })
+
 app.get("/:links",(req,res)=>{
     const requestedUrl=req.params.links;
     if(requestedUrl==="index")
@@ -79,7 +77,15 @@ app.post("/customerSignUp",(req,res)=>{
         var sql="Insert into bank_customer(bank_cust_fname,bank_cust_lname,bank_cust_phone,bank_cust_emailid,bank_cust_account_id,bank_cust_address,bank_cust_aadhar) values(?,?,?,?,?,?,?)";
         db.query(sql,[fname,lname,phone,email,accId,address,aadhar],(err,result)=>{
             if(err) throw err;
-            res.render("customer_profile");
+            else
+            {
+                var sql1 = "SELECT * FROM bank_customer WHERE bank_cust_account_id=?";
+                db.query(sql1,[accId],(error,results)=>{
+                    if(error) throw error;
+
+                    res.render("customer_profile",{fname:results[0].bank_cust_fname,lname:results[0].bank_cust_lname,phone:results[0].bank_cust_phone,email:results[0].bank_cust_emailid,accId:results[0].bank_cust_account_id,address:results[0].bank_cust_address,aadhar:results[0].bank_cust_aadhar,balance:results[0].bank_cust_balance,userInfo:1});
+                })
+            }
         })
 })
 
@@ -128,9 +134,50 @@ app.post("/adminLogin",async(req,res)=>{
         }
     })
 })
-
+app.get("/profile",(req,res)=>{
+    // update the code here afterwards
+})
 app.post("/customerLogin",(req,res)=>{
-    
-    res.render("customer_profile");
+    const userId = req.body.userId;
+    var sql = "SELECT * FROM bank_customer WHERE bank_cust_account_id=?"
+    db.query(sql,[userId],(err,results)=>{
+        if(err) throw err;
+        res.render("customer_profile",{fname:results[0].bank_cust_fname,lname:results[0].bank_cust_lname,phone:results[0].bank_cust_phone,email:results[0].bank_cust_emailid,accId:results[0].bank_cust_account_id,address:results[0].bank_cust_address,aadhar:results[0].bank_cust_aadhar,balance:results[0].bank_cust_balance,userInfo:1}); 
+    })
+})
+
+app.post("/creditMoney", (req, res) => {
+    const id = req.body.id;
+    const amt = parseInt(req.body.money);
+    const selectCustomerSql = "SELECT bank_cust_balance FROM bank_customer WHERE bank_cust_account_id = ?";
+    db.query(selectCustomerSql, [id], (err, result) => {
+        if (err) throw err;
+
+        const currentBalance = parseInt(result[0].bank_cust_balance);
+
+        const updateCustomerSql = "UPDATE bank_customer SET bank_cust_balance = ? WHERE bank_cust_account_id = ?";
+        db.query(updateCustomerSql, [currentBalance + amt, id], (error, resultUpdate) => {
+            if (error) throw error;
+
+            const updateBalanceSql = "UPDATE bank_balance SET amt = ? WHERE cust_accId = ?";
+            db.query(updateBalanceSql, [currentBalance + amt, id], (errorBalance, resultBalance) => {
+                if (errorBalance) throw errorBalance;
+
+                const selectUpdatedCustomerSql = "SELECT * FROM bank_customer WHERE bank_cust_account_id = ?";
+                db.query(selectUpdatedCustomerSql, [id], (errProfile, results) => {
+                    if (errProfile) throw errProfile;
+
+                    res.render("customer_profile",{fname:results[0].bank_cust_fname,lname:results[0].bank_cust_lname,phone:results[0].bank_cust_phone,email:results[0].bank_cust_emailid,accId:results[0].bank_cust_account_id,address:results[0].bank_cust_address,aadhar:results[0].bank_cust_aadhar,balance:results[0].bank_cust_balance,userInfo:1}); 
+                });
+            });
+        });
+    });
+});
+
+
+app.post("/debitMoney",(req,res)=>{
+    const id = req.body.id;
+    const amt = req.body.money;
+    res.send(id+amt)
 })
 app.listen(3000);
