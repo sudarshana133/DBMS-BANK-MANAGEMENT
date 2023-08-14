@@ -42,7 +42,7 @@
             <% if(customers.length>0){ %>
                 <% for(var i=0;i<customers.length;i++){ %>
                     <tr>
-                        <td><%- customers[i].bank_cust_fname %></td>
+                        <td><a href="/profile1?id=<%- customers[i].bank_cust_account_id %>"><%- customers[i].bank_cust_fname %></a></td>
                         <td class="hide"><%- customers[i].bank_cust_lname %></td>
                         <td><%- customers[i].bank_cust_phone %></td>
                         <td class="hide"><%- customers[i].bank_cust_emailid %></td>

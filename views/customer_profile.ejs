@@ -18,66 +18,62 @@
   </div>
   <div class="main">
     <div class="profile-image">
-      <h3>Profile Picture</h3>
-      <img src="images/profilePics/profile1.png" alt="Profile Image">
+      <h3><a href="/profile" style="text-decoration: none; color: black;">Profile Pic</a></h3>
+      <a href="/profile"><img src="images/profilePics/profile1.png" alt="Profile Image"></a>
     </div>
     <div class="section2">
       <div class="personal">
         <h2>Personal Details</h2>
           <div class="p1">
             <p>First Name : </p>
-            <p><%-fname %></p>
+            <p><%-customer[0].bank_cust_fname %></p>
           </div>
           <div class="p1">
             <p>Last Name : </p>
-            <p><%- lname %></p>
+            <p><%- customer[0].bank_cust_lname %></p>
           </div>
           <div class="p1">
             <p>Phone Number : </p>
-            <p><%- phone %></p>
+            <p><%- customer[0].bank_cust_phone %></p>
           </div>
           <div class="p1">
             <p>Email Id : </p>
-            <p><%- email %></p>
+            <p><%- customer[0].bank_cust_emailid %></p>
           </div>
           <div class="p1">
             <p>Address : </p>
-            <p><%- address %></p>
+            <p><%- customer[0].bank_cust_address %></p>
           </div>
       </div>
       <div class="main2">
         <h2>Account details : </h2>
         <div class="p1">
           <p>Account Id : </p>
-          <p><%- accId %></p>
+          <p><%- customer[0].bank_cust_account_id %></p>
         </div>
         <div class="p1">
           <p>Aadhar Number :</p>
-          <p><%- aadhar %></p>
+          <p><%- customer[0].bank_cust_aadhar %></p>
         </div>
         <div class="p1">
           <p>Balance : </p>
-          <p><%- Number(balance) %></p>
+          <p><%- Number(customer[0].bank_cust_balance) %></p>
         </div>
       <% if(userInfo==1){ %>
-        <div class="p1">
-          <p>
+        <div class="p2">
             <form action="/creditMoney" method="post" id="credit">
               Credit
-              <input type="hidden" name="id" value="<%- accId %>">
-              <input type="text" name="money" id="" placeholder="Enter amount" autocomplete="off">
+              <input type="hidden" name="id" value="<%- customer[0].bank_cust_account_id %>">
+              <input type="number" name="money" id="" placeholder="Enter amount" autocomplete="off">
             </form>
-          </p>
-          <p>
             <form action="/debitMoney" method="post" id="debit">
               Debit
-              <input type="hidden" name="id" value="<%- accId %>">
+              <input type="hidden" name="id" value="<%- customer[0].bank_cust_account_id %>">
               <input type="number" name="money" id="" placeholder="Enter amount">
             </form>
-          </p>
         </div>
-        <div class="p1">
-          <p><a href="/updateCustomers?id=<%- accId %>" class="update">Update <i class="fa-solid fa-pen-to-square"></i></a></p>
+        <div class="p3">
+          <a href="/updateCustomers?id=<%- customer[0].bank_cust_account_id %>" class="update">Update Customer <i class="fa-solid fa-pen-to-square"></i></a>
         </div>
       <% } %>
       </div>

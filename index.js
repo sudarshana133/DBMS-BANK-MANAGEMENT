@@ -52,7 +52,22 @@ app.get("/search",(req,res)=>{
         res.render("customer_table",{customers:result});
     })
 })
-
+app.get("/profile",(req,res)=>{
+    const userAccId = req.cookies.custUserId;
+    var sql = "SELECT * FROM bank_customer where bank_cust_account_id= ?";
+    db.query(sql,[userAccId],(err,result)=>{
+        if(err) throw err;
+        res.render("customer_profile",{customer:result,userInfo:1});
+    })
+})
+app.get("/profile1",(req,res)=>{
+    const id = req.query.id;
+    var sql = "SELECT * FROM bank_customer where bank_cust_account_id=?";
+    db.query(sql,[id],(err,result)=>{
+        if(err) throw err;
+        res.render("customer_profile",{customer:result,userInfo:1});
+    })
+})
 app.get("/:links",(req,res)=>{
     const requestedUrl=req.params.links;
     if(requestedUrl==="index")
@@ -98,16 +113,16 @@ app.post("/updateCustomerDetails",(req,res)=>{
     const address=req.body.address;
     const aadhar=req.body.aadharNumber;
     const id=req.body.id;
-    const ifsc = req.cookies.ifsc;
+    // const ifsc = req.cookies.ifsc;
     var sql = "UPDATE bank_customer SET bank_cust_fname=?, bank_cust_lname=?, bank_cust_phone =?, bank_cust_emailid=?, bank_cust_account_id=?, bank_cust_address=?,  bank_cust_aadhar=? where bank_cust_account_id=?";
     db.query(sql,[fname,lname,phone,email,accId,address,aadhar,id],(err,result)=>{
         if(err) throw err;
         else
         {
-            var sql1 = "SELECT * FROM bank_customer WHERE bank_cust_branch_ifsc=? order by bank_cust_account_id desc";
-            db.query(sql1,[ifsc],(error,results)=>{
+            var sql1 = "SELECT * FROM bank_customer WHERE bank_cust_account_id=?";
+            db.query(sql1,[id],(error,results)=>{
                 if(error) throw error;
-                res.render("customer_table",{customers:results});
+                res.render("customer_profile",{customer:results,userInfo:1});
             })
         }
     })
@@ -134,15 +149,12 @@ app.post("/adminLogin",async(req,res)=>{
         }
     })
 })
-app.get("/profile",(req,res)=>{
-    // update the code here afterwards
-})
 app.post("/customerLogin",(req,res)=>{
     const userId = req.body.userId;
     var sql = "SELECT * FROM bank_customer WHERE bank_cust_account_id=?"
-    db.query(sql,[userId],(err,results)=>{
+    db.query(sql,[userId],(err,result)=>{
         if(err) throw err;
-        res.render("customer_profile",{fname:results[0].bank_cust_fname,lname:results[0].bank_cust_lname,phone:results[0].bank_cust_phone,email:results[0].bank_cust_emailid,accId:results[0].bank_cust_account_id,address:results[0].bank_cust_address,aadhar:results[0].bank_cust_aadhar,balance:results[0].bank_cust_balance,userInfo:1}); 
+        res.render("customer_profile",{customer:result,userInfo:1}); 
     })
 })
 
@@ -162,13 +174,8 @@ app.post("/creditMoney", (req, res) => {
             const updateBalanceSql = "UPDATE bank_balance SET amt = ? WHERE cust_accId = ?";
             db.query(updateBalanceSql, [currentBalance + amt, id], (errorBalance, resultBalance) => {
                 if (errorBalance) throw errorBalance;
-
-                const selectUpdatedCustomerSql = "SELECT * FROM bank_customer WHERE bank_cust_account_id = ?";
-                db.query(selectUpdatedCustomerSql, [id], (errProfile, results) => {
-                    if (errProfile) throw errProfile;
-
-                    res.render("customer_profile",{fname:results[0].bank_cust_fname,lname:results[0].bank_cust_lname,phone:results[0].bank_cust_phone,email:results[0].bank_cust_emailid,accId:results[0].bank_cust_account_id,address:results[0].bank_cust_address,aadhar:results[0].bank_cust_aadhar,balance:results[0].bank_cust_balance,userInfo:1}); 
-                });
+                
+                res.redirect("/profile");
             });
         });
     });
@@ -178,6 +185,26 @@ app.post("/creditMoney", (req, res) => {
 app.post("/debitMoney",(req,res)=>{
     const id = req.body.id;
     const amt = req.body.money;
-    res.send(id+amt)
+    var selectcustomer = "SELECT * FROM bank_customer WHERE bank_cust_account_id=?";
+    db.query(selectcustomer,[id],(err,result)=>{
+        if(err) throw err;
+
+        else if(amt>result[0].bank_cust_balance) console.log("amt not present");
+        else 
+        {
+            var amtPresent = result[0].bank_cust_balance;
+            var updateCustBalance = "UPDATE bank_customer SET bank_cust_balance = ? WHERE bank_cust_account_id=?";
+            db.query(updateCustBalance,[amtPresent-amt,id],(error,results)=>{
+                if(error) throw error;
+
+                var updateBalanceSql = "UPDATE bank_balance SET amt = ? WHERE cust_accId = ?";
+                db.query(updateBalanceSql,[amtPresent-amt,id],(errors,resultFound)=>{
+                    if(errors) throw errors;
+                    
+                    res.redirect("/profile");
+                })
+            })
+        }
+    })
 })
 app.listen(3000);
