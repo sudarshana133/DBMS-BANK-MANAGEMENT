@@ -64,12 +64,12 @@
             <form action="/creditMoney" method="post" id="credit">
               Credit
               <input type="hidden" name="id" value="<%- customer[0].bank_cust_account_id %>">
-              <input type="number" name="money" id="" placeholder="Enter amount" autocomplete="off">
+              <input type="text" name="money" id="" placeholder="Enter credit amount" autocomplete="off">
             </form>
             <form action="/debitMoney" method="post" id="debit">
               Debit
               <input type="hidden" name="id" value="<%- customer[0].bank_cust_account_id %>">
-              <input type="number" name="money" id="" placeholder="Enter amount">
+              <input type="text" name="money" id="" placeholder="Enter debit amount">
             </form>
         </div>
         <div class="p3">

@@ -1,0 +1,121 @@
+/* *{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+body
+{
+    background: #a1c4fd;
+    background: -webkit-linear-gradient(to right, rgba(161, 196, 253, 1), rgba(194, 233, 251, 1));
+    background: linear-gradient(to right, rgba(161, 196, 253, 1), rgba(194, 233, 251, 1));
+    text-align: center;
+}
+header
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+.heading h3{
+    margin-top: 10px;
+}
+.heading img{
+    width: 90px;
+    margin-top: 10px;
+    filter: drop-shadow(5px 5px 10px black);
+} */
+/* Reset some default styling */
+* {
+    margin: 0;
+    padding: 0;
+  }
+  body
+  {
+    background: linear-gradient(to right, #B4DCE7, #91B7D9, #669AC6);
+    overflow: hidden;
+  }
+  /* Header */
+  .heading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    color: white;
+  }
+  
+  /* Adjust the size of the logo image */
+  .heading img {
+    width: 77px;
+    margin-top: 10px;
+    filter: drop-shadow(5px 5px 10px black);
+  }
+  
+  form {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .full {
+    display: flex;
+  }
+  
+  .section1 {
+    flex: 1;
+    padding: 20px;
+    border-radius: 15px 0 0 15px;
+    background: white;
+    width: 350px;
+    height: 500px;
+}
+
+.section2 {
+    flex: 1;
+    background-color: #4835d4;
+    color: white;
+    padding: 20px;
+    border-radius: 0 15px 15px 0;
+    height: 500px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  form div{
+    padding: 8px 0;
+  }
+  input[type="text"],
+  input[type="email"],input[type="password"],
+  textarea {
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+  }
+  
+  textarea {
+    resize: vertical;
+  }
+  
+  input[type="submit"] {
+    background-color: white;
+    color: #4835d4;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid white;
+  }
+  
+  input[type="submit"]:hover {
+    background-color: #4835d4;
+    color: white;
+  }
+  
+  /* Align form elements */
+  .section1 div,
+  .section2 div {
+    margin-bottom: 15px;
+  }
+  

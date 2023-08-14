@@ -189,7 +189,7 @@ app.post("/debitMoney",(req,res)=>{
     db.query(selectcustomer,[id],(err,result)=>{
         if(err) throw err;
 
-        else if(amt>result[0].bank_cust_balance) console.log("amt not present");
+        else if(amt>result[0].bank_cust_balance) res.send("Amount in the account is not available");
         else 
         {
             var amtPresent = result[0].bank_cust_balance;

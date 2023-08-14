@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="s.css">
+</head>
+<body>
+    <header>
+        <div class="heading">
+            <a href=""><h2>User Sign Up</h2></a>
+        </div>
+    </header>
+    <main>
+        <form action="/index.html" onsubmit="return handleSubmit()">
+            <div class="full">
+                <div class="section1">
+                    <div class="fname">
+                        <label for="fname">First Name</label>
+                        <input type="text" name="firstName" id="fname" placeholder="First Name">
+                        <h5 id="fnameError" style="color: red; margin-top: 5px;"></h5>
+                    </div>
+                    <div class="lname">
+                        <label for="lname">Last Name</label>
+                        <input type="text" name="lastName" id="lname" placeholder="Last Name">
+                        <h5 id="lnameError" style="color: red; margin-top: 5px;"></h5>
+                    </div>
+                    <div class="phone">
+                        <label for="phone">Phone Number</label>
+                        <input type="text" name="phone" id="phone" placeholder="Phone Number">
+                        <h5 id="phoneError" style="color: red; margin-top: 5px;"></h5>
+                    </div>
+                    <div class="email">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" placeholder="Email Address">
+                        <h5 id="emailError" style="color: red; margin-top: 5px;"></h5>
+                    </div>
+                    <div class="address">
+                        <p>Address</p>
+                        <textarea name="address" id="" cols="20" rows="4"></textarea>
+                        <h5 id="addressError" style="color: red; margin-top: 5px;"></h5>
+                    </div>
+                </div>
+                <div class="section2">
+                    <div class="accountId">
+                        <label for="accId">Account Id</label>
+                        <input type="text" name="accId" id="accId" placeholder="Account Id">
+                        <h5 id="accIdError" style="color: red; margin-top: 5px;"></h5>
+                    </div>
+                    <div class="aadhar">
+                        <label for="aadhar">Aadhar Number</label>
+                        <input type="text" name="aadharNumber" id="aadhar" placeholder="Aadhar Number">
+                        <h5 id="aadharError" style="color: red; margin-top: 5px;"></h5>
+                    </div>
+                    <div class="bank_loc">
+                        <p>Bank Location</p>
+                        <textarea name="bank_loc" id="bank_loc" cols="20" rows="4"></textarea>
+                        <h5 id="bankLocError" style="color: red; margin-top: 5px;"></h5>
+                    </div>
+                    <div class="password">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" id="password" placeholder="Password" autocomplete="off">
+                        <h5 id="passwordError" style="color: red; margin-top: 5px;"></h5>
+                    </div>
+                    <div class="submit">
+                        <input type="submit" value="Submit">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </main>
+    <script>
+        function handleSubmit()
+        {
+            const fname = document.getElementById("fname").value;
+            const lname = document.getElementById("lname").value;
+            const phone = document.getElementById("phone").value;
+            const email = document.getElementById("email").value;
+            const address = document.getElementById("address");
+            const accId = document.getElementById("accId").value;
+            const aadhar = document.getElementById("aadhar").value;
+            const bank_loc = document.getElementById("bank_loc");
+            const password = document.getElementById("password").value;
+    
+            console.log(fname);
+            const fnameError= document.getElementById("fnameError");
+            const lnameError= document.getElementById("lnameError");
+            const phoneError= document.getElementById("phoneError");
+            const emailError= document.getElementById("emailError");
+            const addressError= document.getElementById("addressError");
+            const accIdError= document.getElementById("accIdError");
+            const aadharError= document.getElementById("aadharError");
+            const bankLocError= document.getElementById("bankLocError");
+            const passwordError= document.getElementById("passwordError");
+    
+            fnameError.innerHTML="";
+            lnameError.innerHTML="";
+            phoneError.innerHTML="";
+            emailError.innerHTML="";
+            addressError.innerHTML="";
+            accIdError.innerHTML="";
+            aadharError.innerHTML="";
+            bankLocError.innerHTML="";
+            passwordError.innerHTML="";
+            if(fname.length===0)
+            {
+                fnameError.innerHTML="*First Name cannot be empty!";
+                return false;
+            }
+            else if(lname.length===0)
+            {
+                lnameError.innerHTML="*Last Name cannot be empty!";
+                return false;   
+            }
+            else if(phone.length===0)
+            {
+                lnameError.innerHTML="*Last Name cannot be empty!";
+                return false;   
+            }
+            else if(lname.length===0)
+            {
+                phoneError.innerHTML="*Phone number cannot be empty!";
+                return false;   
+            }
+            else if(lname.length===0)
+            {
+                lnameError.innerHTML="*Last Name cannot be empty!";
+                return false;   
+            }
+            else if(lname.length===0)
+            {
+                lnameError.innerHTML="*Last Name cannot be empty!";
+                return false;   
+            }
+            else if(lname.length===0)
+            {
+                lnameError.innerHTML="*Last Name cannot be empty!";
+                return false;   
+            }
+            else if(lname.length===0)
+            {
+                lnameError.innerHTML="*Last Name cannot be empty!";
+                return false;   
+            }
+            else if(lname.length===0)
+            {
+                lnameError.innerHTML="*Last Name cannot be empty!";
+                return false;   
+            }
+            fname.addEventListener("change",function(){
+                fnameError.innerHTML="";
+            })
+            // return true;
+        }        
+    </script>
+</body>
+</html>
