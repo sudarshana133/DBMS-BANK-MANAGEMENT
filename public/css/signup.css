@@ -1,107 +1,99 @@
 *{
-    padding: 0;
-    margin: 0;
+box-sizing: border-box;
+margin: 0;
+padding: 0;
 }
+body
+{
+background: linear-gradient(to right, #B4DCE7, #91B7D9, #669AC6);
+overflow: hidden;
+}
+
+.heading {
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 20px;
+color: white;
+}
+
+form {
+display: flex;
+justify-content: center;
+padding: 5px;
+}
+
+.full {
+display: flex;
+}
+
+.section1 {
+flex: 1;
+padding: 20px;
+border-radius: 15px 0 0 15px;
+background: white;
+width: 350px;
+height: 580px;
+}
+
+.section2 {
+flex: 1;
+background-color: #4835d4;
+color: white;
+padding: 20px;
+border-radius: 0 15px 15px 0;
+height: 580px;
+}
+
+label {
+display: block;
+margin-bottom: 5px;
+}
+form div{
+padding: 8px 0;
+}
+input[type="text"],
+input[type="email"],input[type="password"],
+textarea {
+padding: 10px;
+border: 1px solid #ced4da;
+border-radius: 5px;
+}
+
+textarea {
+resize: vertical;
+}
+
+input[type="submit"] {
+background-color: white;
+color: #4835d4;
+border: none;
+padding: 10px 20px;
+border-radius: 5px;
+cursor: pointer;
+border: 1px solid white;
+}
+
+input[type="submit"]:hover {
+background-color: #4835d4;
+color: white;
+}
+
+.section1 div,
+.section2 div {
+margin-bottom: 15px;
+}
+@media (max-width:640px) {
 body{
-    /* color: rgb(228, 226, 226); */
-    display: flex;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
+    overflow: scroll;
+}
+.full{
     flex-direction: column;
-    background: #749bfd;
-    font-family:sans-serif;
 }
-header h1{
-    margin: 20px auto;
+.section1{
+    border-radius: 15px 15px 0 0 ;
 }
-header img{
-    width: min(40vw,100px );
-    height: min(40vw,100px );
-    margin: 5px;
-    padding: 0 10px;
+.section2{
+    border-radius: 0 0 15px 15px;
 }
-.main{
-    background: white;
-    color: black;
-    display: flex;
-    flex-direction: column;
-    margin: 30px auto;
-    height:fit-content;
-    border: none;
-    box-shadow: 10px 10px 100px black;
-    border-radius: 10px;
 }
-.label1,.label2,.label3,.label4,.label5,.label6,.label7{
-    display: flex;
-    flex-direction: column;
-    padding: 30px 200px;
-    margin: auto 2px;
-}
-::placeholder{
-    text-align: center;
-}
-.submit{
-    border: none;
-    padding: 6px 5px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-footer h1 a{
-    color: rgb(228, 226, 226);
-}
-@media (width<426px) {
-    .main{
-        width: 80%;
-    }
-    .label1,.label2,.label3{
-        padding: 20px;
-        margin: auto 2px;
-    }
-    footer h1 {
-        font-size: 1rem;
-    }
-}
-
-
-@media (min-width: 1025px) {
-    .h-custom {
-    height: 100vh !important;
-    }
-    }
-    .card-registration .select-input.form-control[readonly]:not([disabled]) {
-    font-size: 1rem;
-    line-height: 2.15;
-    padding-left: .75em;
-    padding-right: .75em;
-    }
-    .card-registration .select-arrow {
-    top: 13px;
-    }
-    
-    .gradient-custom-2 {
-    /* fallback for old browsers */
-    background: #a1c4fd;
-    
-    /* Chrome 10-25, Safari 5.1-6 */
-    background: -webkit-linear-gradient(to right, rgba(161, 196, 253, 1), rgba(194, 233, 251, 1));
-    
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    background: linear-gradient(to right, rgba(161, 196, 253, 1), rgba(194, 233, 251, 1))
-    }
-    
-    .bg-indigo {
-    background-color: #4835d4;
-    }
-    @media (min-width: 992px) {
-    .card-registration-2 .bg-indigo {
-    border-top-right-radius: 15px;
-    border-bottom-right-radius: 15px;
-    }
-    }
-    @media (max-width: 991px) {
-    .card-registration-2 .bg-indigo {
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
-    }
-    }

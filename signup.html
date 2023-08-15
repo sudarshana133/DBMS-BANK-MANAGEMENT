@@ -11,44 +11,176 @@
 </head>
 <body>
     <header>
-        <h1>User Sign Up</h1>
-        <img src="images/logo1.jpeg" alt="logo">
+        <div class="heading">
+            <h1>User Sign Up</h1>
+        </div>
     </header>
-    <form action="/customerSignUp" id="myform" method="post">
-            <div class="main">
-                    <div class="label1">
-                        <label for="firstName">First Name</label>
-                        <input type="text" name="firstName" id="firstName" placeholder="Enter first name">
+    <main>
+        <form action="/customerSignUp" onsubmit="return handleSubmit()">
+            <div class="full">
+                <div class="section1">
+                    <h3 style="text-align: center; color: rgb(41, 41, 41); margin-bottom:10px;">Personal Details</h3>
+                    <div class="fname">
+                        <label for="fname">First Name</label>
+                        <input type="text" name="firstName" id="fname" placeholder="First Name">
+                        <h4 id="fnameError" style="color: red; margin-top: 5px; font-size: .8rem;"></h4>
                     </div>
-                    <div class="label2">
-                        <label for="lastName" >Last Name</label>
-                        <input type="text" name="lastName" id="lastName">
+                    <div class="lname">
+                        <label for="lname">Last Name</label>
+                        <input type="text" name="lastName" id="lname" placeholder="Last Name">
+                        <h4 id="lnameError" style="color: red; margin-top: 5px; font-size: .8rem;"></h4>
                     </div>
-                    <div class="label4">
+                    <div class="phone">
                         <label for="phone">Phone Number</label>
-                        <input type="text" name="phone" id="phone">
+                        <input type="text" name="phone" id="phone" placeholder="Phone Number">
+                        <h4 id="phoneError" style="color: red; margin-top: 5px; font-size: .8rem;"></h4>
                     </div>
-                    <div class="label5">
-                        <label for="email">Email Id</label>
-                        <input type="email" name="email" id="email">
+                    <div class="email">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" placeholder="Email Address">
+                        <h4 id="emailError" style="color: red; margin-top: 5px; font-size: .8rem;"></h4>
                     </div>
-                    <div class="label6">
+                    <div class="address">
+                        <p>Address</p>
+                        <textarea name="address" id="address" cols="20" rows="2"></textarea>
+                        <h4 id="addressError" style="color: red; margin-top: 5px; font-size: .8rem;"></h4>
+                    </div>
+                </div>
+                <div class="section2">
+                    <h3 style="text-align: center; color: rgb(255, 255, 255); margin-bottom:10px;">Bank Details</h3>
+                    <div class="accountId">
                         <label for="accId">Account Id</label>
-                        <input type="text" name="accId" id="accId">
+                        <input type="text" name="accId" id="accId" placeholder="Account Id">
+                        <h4 id="accIdError" style="color: whitesmoke; margin-top: 5px; font-weight: 100; font-size: .8rem;"></h4>
                     </div>
-                    <textarea name="address" id="address" cols="30" rows="10"></textarea>
-                    <div class="label7">
-                        <label for="aadharNumber">Aadhar Number</label>
-                        <input type="text" name="aadharNumber" id="aadharNumber">
+                    <div class="aadhar">
+                        <label for="aadhar">Aadhar Number</label>
+                        <input type="text" name="aadharNumber" id="aadhar" placeholder="Aadhar Number">
+                        <h4 id="aadharError" style="color: whitesmoke; margin-top: 5px; font-weight: 100; font-size: .8rem;"></h4>
                     </div>
-                    <!-- <textarea name="branch_loc" id="branch_loc" cols="30" rows="10"></textarea> -->
-                    <div class="label5">
-                        <input type="submit" value="submit">
+                    <div class="bank_loc">
+                        <p>Bank Location</p>
+                        <textarea name="bank_loc" id="bank_loc" cols="20" rows="2"></textarea>
+                        <h4 id="bankLocError" style="color: whitesmoke; margin-top: 5px; font-weight: 100; font-size: .8rem;"></h4>
                     </div>
+                    <div class="password">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" id="password" placeholder="Password" autocomplete="off">
+                        <h4 id="passwordError" style="color: whitesmoke; margin-top: 5px; font-weight: 100; font-size: .8rem;"></h4>
+                    </div>
+                    <div class="submit">
+                        <input type="submit" value="Submit">
+                    </div>
+                </div>
             </div>
         </form>
+    </main>
     <script>
-        
+        function handleSubmit()
+        {
+            const fname = document.getElementById("fname").value;
+            const lname = document.getElementById("lname").value;
+            const phone = document.getElementById("phone").value;
+            const email = document.getElementById("email").value;
+            const address = document.getElementById("address");
+            const accId = document.getElementById("accId").value;
+            const aadhar = document.getElementById("aadhar").value;
+            const bank_loc = document.getElementById("bank_loc");
+            const password = document.getElementById("password").value;
+    
+            console.log(fname);
+            const fnameError= document.getElementById("fnameError");
+            const lnameError= document.getElementById("lnameError");
+            const phoneError= document.getElementById("phoneError");
+            const emailError= document.getElementById("emailError");
+            const addressError= document.getElementById("addressError");
+            const accIdError= document.getElementById("accIdError");
+            const aadharError= document.getElementById("aadharError");
+            const bankLocError= document.getElementById("bankLocError");
+            const passwordError= document.getElementById("passwordError");
+    
+            fnameError.innerHTML="";
+            lnameError.innerHTML="";
+            phoneError.innerHTML="";
+            emailError.innerHTML="";
+            addressError.innerHTML="";
+            accIdError.innerHTML="";
+            aadharError.innerHTML="";
+            bankLocError.innerHTML="";
+            passwordError.innerHTML="";
+            if(fname.length===0)
+            {
+                fnameError.innerHTML="*First Name cannot be empty!";
+                return false;
+            }
+            else if(lname.length===0)
+            {
+                lnameError.innerHTML="*Last Name cannot be empty!";
+                return false;   
+            }
+            else if(phone.length===0)
+            {
+                phoneError.innerHTML="*Phone number cannot be empty!";
+                return false;   
+            }
+            else if(email.length===0)
+            {
+                emailError.innerHTML="*Email Id cannot be empty!";
+                return false;   
+            }
+            else if(address.value.length===0)
+            {
+                addressError.innerHTML="*Address cannot be empty!";
+                return false;   
+            }
+            else if(accId.length===0)
+            {
+                accIdError.innerHTML="*Account Id cannot be empty!";
+                return false;   
+            }
+            else if(aadhar.length===0)
+            {
+                aadharError.innerHTML="*Aadhar Number cannot be empty!";
+                return false;   
+            }
+            else if(bank_loc.value.length===0)
+            {
+                bankLocError.innerHTML="*Bank Location cannot be empty!";
+                return false;   
+            }
+            else if(password.length===0)
+            {
+                passwordError.innerHTML="*Password cannot be empty!";
+                return false;   
+            }
+        }        
+        fname.addEventListener("input", function() {
+            fnameError.innerHTML = "";
+        });
+        lname.addEventListener("input", function() {
+            lnameError.innerHTML = "";
+        });
+        phone.addEventListener("input", function() {
+            phoneError.innerHTML = "";
+        });
+        email.addEventListener("input", function() {
+            emailError.innerHTML = "";
+        });
+        address.addEventListener("input", function() {
+            addressError.innerHTML = "";
+        });
+        accId.addEventListener("input", function() {
+            accIdError.innerHTML = "";
+        });
+        aadhar.addEventListener("input", function() {
+            aadharError.innerHTML = "";
+        });
+        bank_loc.addEventListener("input", function() {
+            bankLocError.innerHTML = "";
+        });
+        password.addEventListener("input", function() {
+            passwordError.innerHTML = "";
+        });
     </script>
 </body>
 </html>

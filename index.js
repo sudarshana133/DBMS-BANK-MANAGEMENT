@@ -89,6 +89,9 @@ app.post("/customerSignUp",(req,res)=>{
     const accId=req.body.accId;
     const address=req.body.address;
     const aadhar=req.body.aadharNumber;
+    const bankLoc = req.body.bank_loc;
+    const ifsc=0;
+    if(bankLoc==="") 
         var sql="Insert into bank_customer(bank_cust_fname,bank_cust_lname,bank_cust_phone,bank_cust_emailid,bank_cust_account_id,bank_cust_address,bank_cust_aadhar) values(?,?,?,?,?,?,?)";
         db.query(sql,[fname,lname,phone,email,accId,address,aadhar],(err,result)=>{
             if(err) throw err;
