@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.min.js">
     <link rel="stylesheet" href="css/signup.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="shortcut icon" href="images/logo1.jpeg" type="image/x-icon">
@@ -12,11 +11,12 @@
 <body>
     <header>
         <div class="heading">
+            <a href="/"><img src="images/logo1.jpeg" alt="logo"></a>
             <h1>User Sign Up</h1>
         </div>
     </header>
     <main>
-        <form action="/customerSignUp" onsubmit="return handleSubmit()">
+        <form action="/customerSignUp" method="post" onsubmit="return handleSubmit()">
             <div class="full">
                 <div class="section1">
                     <h3 style="text-align: center; color: rgb(41, 41, 41); margin-bottom:10px;">Personal Details</h3>
@@ -88,7 +88,6 @@
             const bank_loc = document.getElementById("bank_loc");
             const password = document.getElementById("password").value;
     
-            console.log(fname);
             const fnameError= document.getElementById("fnameError");
             const lnameError= document.getElementById("lnameError");
             const phoneError= document.getElementById("phoneError");

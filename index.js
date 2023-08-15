@@ -90,21 +90,17 @@ app.post("/customerSignUp",(req,res)=>{
     const address=req.body.address;
     const aadhar=req.body.aadharNumber;
     const bankLoc = req.body.bank_loc;
-    const ifsc=0;
-    if(bankLoc==="") 
-        var sql="Insert into bank_customer(bank_cust_fname,bank_cust_lname,bank_cust_phone,bank_cust_emailid,bank_cust_account_id,bank_cust_address,bank_cust_aadhar) values(?,?,?,?,?,?,?)";
-        db.query(sql,[fname,lname,phone,email,accId,address,aadhar],(err,result)=>{
-            if(err) throw err;
-            else
-            {
-                var sql1 = "SELECT * FROM bank_customer WHERE bank_cust_account_id=?";
-                db.query(sql1,[accId],(error,results)=>{
-                    if(error) throw error;
+    const password = req.body.password;
+    res.cookie('customerUserId',accId);
+    var ifsc="";
+    if(bankLoc==="New York Branch") ifsc = "ABCD1234567"; 
+    else if(bankLoc==="San Francisco Branch") ifsc = "EFGH8901234";
 
-                    res.render("customer_profile",{fname:results[0].bank_cust_fname,lname:results[0].bank_cust_lname,phone:results[0].bank_cust_phone,email:results[0].bank_cust_emailid,accId:results[0].bank_cust_account_id,address:results[0].bank_cust_address,aadhar:results[0].bank_cust_aadhar,balance:results[0].bank_cust_balance,userInfo:1});
-                })
-            }
-        })
+    var sql="Insert into bank_customer(bank_cust_fname,bank_cust_lname,bank_cust_phone,bank_cust_emailid,bank_cust_account_id,bank_cust_address,bank_cust_aadhar,bank_cust_branch_loc,bank_cust_branch_ifsc,bank_cust_password) values(?,?,?,?,?,?,?,?,?,?)";
+    db.query(sql,[fname,lname,phone,email,accId,address,aadhar,bankLoc,ifsc,password],(err,result)=>{
+        if(err) throw err;
+        res.redirect("/profile");
+    })
 })
 
 app.post("/updateCustomerDetails",(req,res)=>{
@@ -112,20 +108,26 @@ app.post("/updateCustomerDetails",(req,res)=>{
     const lname=req.body.lastName;
     const phone=req.body.phone;
     const email=req.body.email;
-    const accId=req.body.accId;
     const address=req.body.address;
     const aadhar=req.body.aadharNumber;
-    const id=req.body.id;
-    // const ifsc = req.cookies.ifsc;
-    var sql = "UPDATE bank_customer SET bank_cust_fname=?, bank_cust_lname=?, bank_cust_phone =?, bank_cust_emailid=?, bank_cust_account_id=?, bank_cust_address=?,  bank_cust_aadhar=? where bank_cust_account_id=?";
-    db.query(sql,[fname,lname,phone,email,accId,address,aadhar,id],(err,result)=>{
+    const password = req.body.password;
+    const bankLoc = req.body.bank_loc;
+    const id = req.body.id;
+    var ifsc ="";
+    if(bankLoc==="New York Branch") ifsc = "ABCD1234567"; 
+    else if(bankLoc==="San Francisco Branch") ifsc = "EFGH8901234";
+
+    res.cookie('custUserId',id)
+    
+    var sql = "UPDATE bank_customer SET bank_cust_fname=?, bank_cust_lname=?, bank_cust_phone =?, bank_cust_emailid=?, bank_cust_address=?,  bank_cust_aadhar=?, bank_cust_branch_ifsc=?, bank_cust_password=?, bank_cust_branch_loc=? where bank_cust_account_id=?";
+    db.query(sql,[fname,lname,phone,email,address,aadhar,ifsc,password,bankLoc,id],(err,result)=>{
         if(err) throw err;
         else
         {
             var sql1 = "SELECT * FROM bank_customer WHERE bank_cust_account_id=?";
             db.query(sql1,[id],(error,results)=>{
                 if(error) throw error;
-                res.render("customer_profile",{customer:results,userInfo:1});
+                res.redirect("/profile");
             })
         }
     })
@@ -154,6 +156,7 @@ app.post("/adminLogin",async(req,res)=>{
 })
 app.post("/customerLogin",(req,res)=>{
     const userId = req.body.userId;
+    res.cookie('custUserId',userId);
     var sql = "SELECT * FROM bank_customer WHERE bank_cust_account_id=?"
     db.query(sql,[userId],(err,result)=>{
         if(err) throw err;
