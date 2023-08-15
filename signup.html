@@ -16,7 +16,7 @@
         </div>
     </header>
     <main>
-        <form action="/customerSignUp" method="post" onsubmit="return handleSubmit()">
+        <form action="/customerSignUp" method="post" onsubmit="return handleSubmit()" enctype="multipart/form-data">
             <div class="full">
                 <div class="section1">
                     <h3 style="text-align: center; color: rgb(41, 41, 41); margin-bottom:10px;">Personal Details</h3>
@@ -67,6 +67,9 @@
                         <label for="password">Password</label>
                         <input type="password" name="password" id="password" placeholder="Password" autocomplete="off">
                         <h4 id="passwordError" style="color: whitesmoke; margin-top: 5px; font-weight: 100; font-size: .8rem;"></h4>
+                    </div>
+                    <div class="photo">
+                        <input type="file" name="photo" id="photo">
                     </div>
                     <div class="submit">
                         <input type="submit" value="Submit">

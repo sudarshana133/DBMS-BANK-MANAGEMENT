@@ -1,12 +1,28 @@
 const db=require("./connection");
 const express=require("express");
+const multer = require("multer");
+const path = require("path");
 const bodyParser=require("body-parser");
 const cookieParser = require("cookie-parser");
-const app=express();
+const { log } = require("console");
 
-app.use(bodyParser.urlencoded({extended:true}));
+const app=express();
+// file upload
+const storage = multer.diskStorage({
+    destination:function(req,file,cb){
+       return cb(null,"./public/images/profilePics");
+    },
+    filename: function(req,file,cb){
+        // console.log(file);
+        return cb(null,`${Date.now()}-${file.originalname}`);
+    },
+});
+const upload = multer({storage:storage});
+
+app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
+app.set("views",path.resolve("./views"));
 app.use(cookieParser());
 
 app.get("/",(req,res)=>{
@@ -52,14 +68,27 @@ app.get("/search",(req,res)=>{
         res.render("customer_table",{customers:result});
     })
 })
-app.get("/profile",(req,res)=>{
-    const userAccId = req.cookies.custUserId;
-    var sql = "SELECT * FROM bank_customer where bank_cust_account_id= ?";
-    db.query(sql,[userAccId],(err,result)=>{
-        if(err) throw err;
-        res.render("customer_profile",{customer:result,userInfo:1});
-    })
-})
+app.get("/profile", (req, res) => {
+    const userId = req.cookies.userId;
+    const custUserId = req.cookies.custUserId;
+    const accountId = userId || custUserId;
+
+    if (accountId) {
+        const sql = "SELECT * FROM bank_customer WHERE bank_cust_account_id = ?";
+        db.query(sql, [accountId], (err, result) => {
+            if (err) throw err;
+
+
+            // Render the profile page and pass the customer data and photo data
+            res.render("customer_profile", { customer: result, userInfo: 1 });
+        });
+    } else {
+        // Handle the case where neither userId nor custUserId is available
+        // For example, you might redirect the user to a login page
+        res.redirect("/customerLogin");
+    }
+});
+
 app.get("/profile1",(req,res)=>{
     const id = req.query.id;
     var sql = "SELECT * FROM bank_customer where bank_cust_account_id=?";
@@ -81,7 +110,7 @@ app.get("/:links",(req,res)=>{
 })
 
 
-app.post("/customerSignUp",(req,res)=>{
+app.post("/customerSignUp",upload.single('photo'),(req,res)=>{
     const fname=req.body.firstName;
     const lname=req.body.lastName;
     const phone=req.body.phone;
@@ -91,19 +120,23 @@ app.post("/customerSignUp",(req,res)=>{
     const aadhar=req.body.aadharNumber;
     const bankLoc = req.body.bank_loc;
     const password = req.body.password;
-    res.cookie('customerUserId',accId);
+
+    // console.log(req.file);
+    // Photo data from the uploaded file
+    const photo = req.file.filename;
+
+    res.cookie('custUserId',accId);
     var ifsc="";
     if(bankLoc==="New York Branch") ifsc = "ABCD1234567"; 
     else if(bankLoc==="San Francisco Branch") ifsc = "EFGH8901234";
 
-    var sql="Insert into bank_customer(bank_cust_fname,bank_cust_lname,bank_cust_phone,bank_cust_emailid,bank_cust_account_id,bank_cust_address,bank_cust_aadhar,bank_cust_branch_loc,bank_cust_branch_ifsc,bank_cust_password) values(?,?,?,?,?,?,?,?,?,?)";
-    db.query(sql,[fname,lname,phone,email,accId,address,aadhar,bankLoc,ifsc,password],(err,result)=>{
+    var sql="Insert into bank_customer(bank_cust_fname,bank_cust_lname,bank_cust_phone,bank_cust_emailid,bank_cust_account_id,bank_cust_address,bank_cust_aadhar,bank_cust_branch_loc,bank_cust_branch_ifsc,bank_cust_password,bank_cust_photo) values(?,?,?,?,?,?,?,?,?,?,?)";
+    db.query(sql,[fname,lname,phone,email,accId,address,aadhar,bankLoc,ifsc,password,photo],(err,result)=>{
         if(err) throw err;
         res.redirect("/profile");
     })
 })
-
-app.post("/updateCustomerDetails",(req,res)=>{
+app.post("/updateCustomerDetails",upload.single('updatePhoto'),(req,res)=>{
     const fname=req.body.firstName;
     const lname=req.body.lastName;
     const phone=req.body.phone;
@@ -113,14 +146,16 @@ app.post("/updateCustomerDetails",(req,res)=>{
     const password = req.body.password;
     const bankLoc = req.body.bank_loc;
     const id = req.body.id;
+    // console.log(req.file);
+    const photo = req.file.filename;
     var ifsc ="";
     if(bankLoc==="New York Branch") ifsc = "ABCD1234567"; 
     else if(bankLoc==="San Francisco Branch") ifsc = "EFGH8901234";
 
     res.cookie('custUserId',id)
     
-    var sql = "UPDATE bank_customer SET bank_cust_fname=?, bank_cust_lname=?, bank_cust_phone =?, bank_cust_emailid=?, bank_cust_address=?,  bank_cust_aadhar=?, bank_cust_branch_ifsc=?, bank_cust_password=?, bank_cust_branch_loc=? where bank_cust_account_id=?";
-    db.query(sql,[fname,lname,phone,email,address,aadhar,ifsc,password,bankLoc,id],(err,result)=>{
+    var sql = "UPDATE bank_customer SET bank_cust_fname=?, bank_cust_lname=?, bank_cust_phone =?, bank_cust_emailid=?, bank_cust_address=?,  bank_cust_aadhar=?, bank_cust_branch_ifsc=?, bank_cust_password=?, bank_cust_branch_loc=?,bank_cust_photo = ? where bank_cust_account_id=?";
+    db.query(sql,[fname,lname,phone,email,address,aadhar,ifsc,password,bankLoc,photo,id],(err,result)=>{
         if(err) throw err;
         else
         {

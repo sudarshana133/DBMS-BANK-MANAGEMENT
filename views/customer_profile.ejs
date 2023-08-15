@@ -19,7 +19,17 @@
   <div class="main">
     <div class="profile-image">
       <h3><a href="/profile" style="text-decoration: none; color: black;">Profile Pic</a></h3>
-      <a href="/profile"><img src="images/profilePics/profile1.png" alt="Profile Image"></a>
+      
+      <% if (customer[0].bank_cust_photo && customer[0].bank_cust_photo.length > 0) { %>
+        <a href="/profile">
+          <img src="<%= '/images/profilePics/' + customer[0].bank_cust_photo %>" alt="Profile Image">
+        </a>
+        </a>
+      <% } else { %>
+        <a href="/profile">
+          <img src="images/profilePics/profile1.png" alt="Default Profile Image">
+        </a>
+      <% } %>
     </div>
     <div class="section2">
       <div class="personal">
