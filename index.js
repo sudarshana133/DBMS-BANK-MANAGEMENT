@@ -24,6 +24,7 @@ app.use(express.static("public"));
 app.set('view engine', 'ejs');
 app.set("views",path.resolve("./views"));
 app.use(cookieParser());
+app.use(bodyParser.json());
 
 app.get("/",(req,res)=>{
     res.sendFile(__dirname+"/index.html");
@@ -69,18 +70,16 @@ app.get("/search",(req,res)=>{
     })
 })
 app.get("/profile", (req, res) => {
-    const userId = req.cookies.userId;
-    const custUserId = req.cookies.custUserId;
-    const accountId = userId || custUserId;
+    const userId = req.cookies.custUserId;
 
-    if (accountId) {
+    if (userId) {
         const sql = "SELECT * FROM bank_customer WHERE bank_cust_account_id = ?";
-        db.query(sql, [accountId], (err, result) => {
+        db.query(sql, [userId], (err, result) => {
             if (err) throw err;
 
 
             // Render the profile page and pass the customer data and photo data
-            res.render("customer_profile", { customer: result, userInfo: 1 });
+            res.render("customer_profile", { customer: result, userInfo: 0 });
         });
     } else {
         // Handle the case where neither userId nor custUserId is available
@@ -91,6 +90,16 @@ app.get("/profile", (req, res) => {
 
 app.get("/profile1",(req,res)=>{
     const id = req.query.id;
+    res.cookie('custUserIdViewAdmin',id);
+    var sql = "SELECT * FROM bank_customer where bank_cust_account_id=?";
+    db.query(sql,[id],(err,result)=>{
+        if(err) throw err;
+        res.render("customer_profile",{customer:result,userInfo:1});
+    })
+})
+// in point of view of admin only
+app.get("/profileViewAdmin",(req,res)=>{
+    const id = req.cookies.custUserIdViewAdmin;
     var sql = "SELECT * FROM bank_customer where bank_cust_account_id=?";
     db.query(sql,[id],(err,result)=>{
         if(err) throw err;
@@ -107,6 +116,8 @@ app.get("/:links",(req,res)=>{
         res.sendFile(__dirname+"/signup.html");
     else if(requestedUrl=='admin')
         res.sendFile(__dirname+"/admin.html");
+    else if(requestedUrl=='signup1')
+        res.sendFile(__dirname+"/signup1.html");
 })
 
 
@@ -136,6 +147,32 @@ app.post("/customerSignUp",upload.single('photo'),(req,res)=>{
         res.redirect("/profile");
     })
 })
+app.post("/customerSignUpAdminView",upload.single('photo'),(req,res)=>{
+    const fname=req.body.firstName;
+    const lname=req.body.lastName;
+    const phone=req.body.phone;
+    const email=req.body.email;
+    const accId=req.body.accId;
+    const address=req.body.address;
+    const aadhar=req.body.aadharNumber;
+    const bankLoc = req.body.bank_loc;
+    const password = req.body.password;
+
+    // console.log(req.file);
+    // Photo data from the uploaded file
+    const photo = req.file.filename;
+
+    res.cookie('custUserIdViewAdmin',accId);
+    var ifsc="";
+    if(bankLoc==="New York Branch") ifsc = "ABCD1234567"; 
+    else if(bankLoc==="San Francisco Branch") ifsc = "EFGH8901234";
+
+    var sql="Insert into bank_customer(bank_cust_fname,bank_cust_lname,bank_cust_phone,bank_cust_emailid,bank_cust_account_id,bank_cust_address,bank_cust_aadhar,bank_cust_branch_loc,bank_cust_branch_ifsc,bank_cust_password,bank_cust_photo) values(?,?,?,?,?,?,?,?,?,?,?)";
+    db.query(sql,[fname,lname,phone,email,accId,address,aadhar,bankLoc,ifsc,password,photo],(err,result)=>{
+        if(err) throw err;
+        res.redirect("/profileViewAdmin");
+    })
+})
 app.post("/updateCustomerDetails",upload.single('updatePhoto'),(req,res)=>{
     const fname=req.body.firstName;
     const lname=req.body.lastName;
@@ -162,7 +199,7 @@ app.post("/updateCustomerDetails",upload.single('updatePhoto'),(req,res)=>{
             var sql1 = "SELECT * FROM bank_customer WHERE bank_cust_account_id=?";
             db.query(sql1,[id],(error,results)=>{
                 if(error) throw error;
-                res.redirect("/profile");
+                res.redirect("/profileViewAdmin");
             })
         }
     })
@@ -191,11 +228,11 @@ app.post("/adminLogin",async(req,res)=>{
 })
 app.post("/customerLogin",(req,res)=>{
     const userId = req.body.userId;
-    res.cookie('custUserId',userId);
+    res.cookie('custUserIdViewCustomer',userId);
     var sql = "SELECT * FROM bank_customer WHERE bank_cust_account_id=?"
     db.query(sql,[userId],(err,result)=>{
         if(err) throw err;
-        res.render("customer_profile",{customer:result,userInfo:1}); 
+        res.render("customer_profile",{customer:result,userInfo:0}); 
     })
 })
 
@@ -216,7 +253,7 @@ app.post("/creditMoney", (req, res) => {
             db.query(updateBalanceSql, [currentBalance + amt, id], (errorBalance, resultBalance) => {
                 if (errorBalance) throw errorBalance;
                 
-                res.redirect("/profile");
+                res.redirect("/profileViewAdmin");
             });
         });
     });
@@ -242,10 +279,21 @@ app.post("/debitMoney",(req,res)=>{
                 db.query(updateBalanceSql,[amtPresent-amt,id],(errors,resultFound)=>{
                     if(errors) throw errors;
                     
-                    res.redirect("/profile");
+                    res.redirect("/profileViewAdmin");
                 })
             })
         }
     })
 })
+// set the themes 
+app.post('/change-theme', (req, res) => {
+    const selectedTheme = req.body.theme;
+    // console.log(selectedTheme);
+    // Logic to set a cookie based on the selected theme
+    res.cookie('theme', selectedTheme, { maxAge: 30 * 24 * 60 * 60 * 1000 }); // Cookie expires in 30 days
+    
+    // Respond with a success message or any necessary data
+    res.status(200).json({});
+});
+
 app.listen(3000);

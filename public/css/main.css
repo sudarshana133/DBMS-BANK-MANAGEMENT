@@ -19,3 +19,31 @@ body
 {
     font-family: 'Poppins', sans-serif;
 }
+.light {
+    --bg-color: #f0f0f0;
+    --text-color: #333;
+    --bg-header: #ffffff;
+    --bg-footer: #f0f0f0;
+    --bg-button: #022a60;
+    --bg-button-hover: #014285;
+    --bg-button-hover-light: #014285; /* Background color on hover for buttons (same as --bg-button-hover) */
+    --bg-feature: #ffffff;
+    --bg-feature-hover: #f7f7f7;
+    --text-color-light: #fff; /* Light text color for buttons */
+    --bg-button-light: #022a60; /* Background color for buttons (same as --bg-button) */
+    --label-color:#d3d3d3;
+    --contrast-color:black;
+}
+
+.dark {
+    --bg-color: #444;
+    --text-color: #f0f0f0;
+    --bg-header: #444;
+    --bg-footer: #333;
+    --bg-button: #1a1a1a;
+    --bg-button-hover: #333;
+    --bg-feature: #444;
+    --bg-feature-hover: #555;
+    --contrast-color:white;
+    --label-color:#555;
+}

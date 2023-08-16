@@ -17,6 +17,8 @@ body{
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 table,th,td{
     border: 1px solid rgb(221, 221, 221);

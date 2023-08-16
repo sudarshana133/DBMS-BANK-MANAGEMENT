@@ -6,22 +6,23 @@
   
   body {
     font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+    background: var(--bg-color);
+    color: var(--text-color);
     display: flex;
     flex-direction: column;
-    margin-top: 75px;
     overflow: hidden;
     align-items: center;
     min-height: 100vh;
   }
   
   header {
+    margin-top: 20px;
     text-align: center;
     margin-bottom: 40px;
   }
   header h1 {
     font-size: 28px;
-    color: #333;
+    color: var(--text-color);
     margin-bottom: 5px;
   }
   header img {
@@ -32,7 +33,7 @@
   }
   
   #myform {
-    background-color: #f0f0f0; 
+    background: var(--bg-color); 
     border-radius: 10px;
     padding: 20px;
     box-shadow: 5px 5px 10px black;
@@ -54,7 +55,7 @@
     flex: 1;
     margin-right: 10px;
     font-weight: bold;
-    color: #555;
+    color: var(--label-color);
   }
   
   input[type="text"],
@@ -89,7 +90,6 @@
   @media screen and (max-width: 480px) {
     #myform {
       width: 75%;
-      /* box-shadow: none; */
     }
   }
   

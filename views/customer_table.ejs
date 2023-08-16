@@ -57,7 +57,7 @@
                 <tr>
                     <td colspan="9">Date not found</td>
                 </tr>
-                    <a href="/signup" class="addCustomer">Add Customer</a>
+                    <a href="/signup1" class="addCustomer">Add Customer</a>
             <% } %>
     </table>
     <script>
@@ -74,6 +74,22 @@
                 }
             });
         });
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+        const themeValue = getCookie('theme');
+
+        if (themeValue === 'dark') {
+            // Apply dark theme styles
+            document.body.style.backgroundColor = '#333';
+            document.body.style.color = '#fff';
+        } else {
+            // Apply light theme styles
+            document.body.style.backgroundColor = '#f0f0f0';
+            document.body.style.color = '#333';
+        }
     </script>
 </body>
 </html>

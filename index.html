@@ -26,7 +26,7 @@
                 <a href="/admin" class="admin">Admin</a>
             </div>
             <div class="toggle">
-                <input type="checkbox" id="modeToggle">
+                <input type="checkbox" id="modeToggle" name="theme">             
                 <label for="modeToggle" class="toggle-label"></label>
             </div>
         </div>
@@ -40,6 +40,7 @@
             <img src="images/poster.jpg" alt="">
         </div>
     </section>
+    <a href="/signup" class="btn">Join With Us</a>
 
     <section class="features">
         <div class="feature">
@@ -62,23 +63,57 @@
 
     <script>
         const modeToggle = document.getElementById("modeToggle");
-        modeToggle.style.display="none";
-        modeToggle.addEventListener("change", () => {
-            if (modeToggle.checked) {
-                document.documentElement.classList.add("dark");
-                document.documentElement.classList.remove("light");
-            } else {
-                document.documentElement.classList.add("light");
-                document.documentElement.classList.remove("dark");
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+    
+        const themeValue = getCookie('theme');
+    
+        if (themeValue === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+            modeToggle.style.transform = 'translateX(20px)';
+        } else {
+            document.documentElement.classList.add('light');
+            document.documentElement.classList.remove('dark');
+            modeToggle.style.transform = 'translateX(0)'; 
+        }
+    
+    
+        modeToggle.addEventListener("change", async () => {
+            const selectedTheme = modeToggle.checked ? 'dark' : 'light';
+    
+            try {
+                const response = await fetch('/change-theme', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ theme: selectedTheme })
+                });
+    
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(data.message);
+                    if (selectedTheme === 'dark') {
+                        // Apply dark theme styles
+                        document.documentElement.classList.add('dark');
+                        document.documentElement.classList.remove('light');
+                    } else {
+                        // Apply light theme styles
+                        document.documentElement.classList.add('light');
+                        document.documentElement.classList.remove('dark');
+                    }
+                } else {
+                    console.error('Failed to change theme.');
+                }
+            } catch (error) {
+                console.error('An error occurred:', error);
             }
         });
-
-        const savedTheme = localStorage.getItem("theme");
-        if (savedTheme) {
-            document.documentElement.classList.add(savedTheme);
-            modeToggle.checked = savedTheme === "dark";
-        }
-
     </script>
+    
 </body>
 </html>
