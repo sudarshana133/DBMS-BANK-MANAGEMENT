@@ -76,6 +76,14 @@
           <p>Balance : </p>
           <p><%- Number(customer[0].bank_cust_balance) %></p>
         </div>
+
+      <% if(userInfo==0){ %>
+        <div class="p2">
+          <a href="/transaction" class="btn" style="width: 150px;">Credit Money</a>
+          <a href="/transaction" class="btn" style="width: 150px; margin-top: 10px;">Debit Money</a>
+        </div>
+      <% } %>
+
       <% if(userInfo==1){ %>
         <div class="p2">
             <form action="/creditMoney" method="post" id="credit">

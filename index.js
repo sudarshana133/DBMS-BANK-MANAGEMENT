@@ -106,6 +106,9 @@ app.get("/profileViewAdmin",(req,res)=>{
         res.render("customer_profile",{customer:result,userInfo:1});
     })
 })
+app.get("/transaction",(req,res)=>{
+    res.render("transaction");
+})
 app.get("/:links",(req,res)=>{
     const requestedUrl=req.params.links;
     if(requestedUrl==="index")
@@ -285,11 +288,60 @@ app.post("/debitMoney",(req,res)=>{
         }
     })
 })
+app.post("/moneyTransaction",(req,res)=>{
+    const accId = req.body.accountId;
+    const beneficiaryAccId = req.body.beneficiaryAccId;
+    const amt = req.body.amt;
+    res.cookie('custUserId',accId);
+    var customersql = "SELECT * FROM bank_balance where cust_accId=?";
+    db.query(customersql,[accId],(errors,result)=>{
+        if(errors) throw errors;
+        
+        const customerBalance = result[0].amt;
+        if(amt>customerBalance) res.redirect("/profile");
+        else
+        {
+            var current = new Date();
+            var day = current.getDate();
+            var month = current.getMonth()+1;
+            var year = current.getFullYear();
+            var Transctime = current.toLocaleTimeString();
+
+            const debit = "INSERT INTO debit VALUES(?,?) ";
+            db.query(debit,[amt,accId],(debitErr,debitResult)=>{
+                if(debitErr) throw debitErr;
+            })
+            const credit = "INSERT INTO credit VALUES(?,?) ";
+            db.query(credit,[amt,beneficiaryAccId],(creditErr,creditResult)=>{
+                if(creditErr) throw creditErr;
+            })
+            const time1 = "INSERT INTO time VALUES(?,?)";
+            db.query(time1,[Transctime,accId],(debitTimeErr,)=>{
+                if(debitTimeErr) throw debitTimeErr;
+            });
+            const time2 = "INSERT INTO time VALUES(?,?)";
+            db.query(time2,[Transctime,beneficiaryAccId],(creditTimeErr,)=>{
+                if(creditTimeErr) throw creditTimeErr;
+            });
+            const date1 = "INSERT INTO date VALUES(?,?) ";
+            db.query(date1,[(`${year}-${month}-${day}`),accId],(debitDateErr,debitDateRes)=>{
+                if(debitDateErr) throw debitDateErr;
+            })
+            const date2 = "INSERT INTO date VALUES(?,?) ";
+            db.query(date2,[(`${year}-${month}-${day}`),beneficiaryAccId],(debitDateErr,debitDateRes)=>{
+                if(debitDateErr) throw debitDateErr;
+            })
+            
+        }
+    })
+})
+
+
+
 // set the themes 
 app.post('/change-theme', (req, res) => {
     const selectedTheme = req.body.theme;
     // console.log(selectedTheme);
-    // Logic to set a cookie based on the selected theme
     res.cookie('theme', selectedTheme, { maxAge: 30 * 24 * 60 * 60 * 1000 }); // Cookie expires in 30 days
     
     // Respond with a success message or any necessary data
