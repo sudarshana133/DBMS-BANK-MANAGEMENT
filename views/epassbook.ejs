@@ -21,23 +21,45 @@
     </div>
     <table>
         <tr>
-            <th>Date</th>
-            <th>Details</th>
-            <th>Amount DR/CR</th>
-            <th>Transaction time</th>
+            <th class="hide">Date</th>
+            <th class="hide">Transaction Type</th>
+            <th>Amount</th>
+            <th>Transaction Time</th>
+            <th>Balance</th>
+            <th>Counterparty Account ID</th>
         </tr>
-        <% if(transactions.length>0){ %>
-            <% for(var i=0;i<transactions.length;i++){ %>
+        <% if (transactions.length > 0) { %>
+            <% transactions.forEach(transaction => { %>
                 <tr>
-                    <td><%- transactions[i].amt %></td>
-                    <td><%- transactions[i].creditcustomerId %></td>
-                    <td><%- transactions[i].debit_amt %></td>
-                    <td><%- transactions[i].time %></td>
+                    <td class="hide"><%- transaction.date.toISOString().substr(0, 10) %></td>
+                    <td class="hide">
+                        <% if (transaction.debitcustomerId === parseInt(accId)) { %>
+                            Debit
+                        <% } else if (transaction.creditcustomerId === parseInt(accId)) { %>
+                            Credit
+                        <% } %>
+                    </td>
+                    <td><%- transaction.amt %></td>
+                    <td><%- transaction.time %></td>
+                    <td>
+                        <% if (transaction.debitcustomerId === parseInt(accId)) { %>
+                            <%- transaction.debitCurBalance %>
+                        <% } else if (transaction.creditcustomerId === parseInt(accId)) { %>
+                            <%- transaction.creditCurBalance %>
+                        <% } %>
+                    </td>
+                    <td>
+                        <% if (transaction.debitcustomerId === parseInt(accId)) { %>
+                            <%- transaction.creditcustomerId %>
+                        <% } else if (transaction.creditcustomerId === parseInt(accId)) { %>
+                            <%- transaction.debitcustomerId %>
+                        <% } %>
+                    </td>
                 </tr>
-            <% } %>
-        <% } else{%>
+            <% }); %>
+        <% } else { %>
             <tr>
-                <td colspan="5">No transactions</td>
+                <td colspan="6">No transactions</td>
             </tr>
         <% } %>
     </table>

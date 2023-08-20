@@ -110,14 +110,23 @@ app.get("/transaction",(req,res)=>{
     res.render("transaction",{accId:accId});
 })
 // update the code here
-app.get("/epassbook",(req,res)=>{
+app.get("/epassbook", (req, res) => {
     const accId = req.query.id;
-    var selectCust = "SELECT * FROM transaction WHERE debitCustomerId = ? or creditCustomerId = ?";
-    db.query(selectCust,[accId,accId],(errors,transactions)=>{
-        if(errors) throw errors;
-        res.send(transactions);
-    })
-})
+
+    const selectTransactions = `
+        SELECT * FROM transaction
+        WHERE debitcustomerId = ? OR creditcustomerId = ?
+        ORDER BY date, time desc`;
+
+    db.query(selectTransactions, [accId, accId], (error, transactions) => {
+        if (error) {
+            throw error;
+        }
+
+        res.render("epassbook", { transactions: transactions, accId: accId });
+    });
+});
+
 app.get("/:links",(req,res)=>{
     const requestedUrl=req.params.links;
     if(requestedUrl==="index")
