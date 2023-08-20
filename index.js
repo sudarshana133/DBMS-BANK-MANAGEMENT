@@ -4,7 +4,7 @@ const multer = require("multer");
 const path = require("path");
 const bodyParser=require("body-parser");
 const cookieParser = require("cookie-parser");
-const { log } = require("console");
+const { log, error } = require("console");
 
 const app=express();
 // file upload
@@ -77,7 +77,6 @@ app.get("/profile", (req, res) => {
         db.query(sql, [userId], (err, result) => {
             if (err) throw err;
 
-
             // Render the profile page and pass the customer data and photo data
             res.render("customer_profile", { customer: result, userInfo: 0 });
         });
@@ -107,7 +106,21 @@ app.get("/profileViewAdmin",(req,res)=>{
     })
 })
 app.get("/transaction",(req,res)=>{
-    res.render("transaction");
+    const accId = req.query.id;
+    res.render("transaction",{accId:accId});
+})
+// update the code here
+app.get("/epassbook",(req,res)=>{
+    const accId = req.query.id;
+    var selectCustomerb = "SELECT * FROM debitAmt where debitcustomerId=?";
+    var selectCutomerd = "SELECT * FROM creditAmt where creditcustomerId=?";
+    db.query(selectCutomerd,[accId],(error,result)=>{
+        if(error) throw error;
+        db.query(selectCustomerb,[accId],(err,results)=>{
+            if(err) throw err;
+            res.send(result)
+        })
+    })
 })
 app.get("/:links",(req,res)=>{
     const requestedUrl=req.params.links;
@@ -293,46 +306,61 @@ app.post("/moneyTransaction",(req,res)=>{
     const beneficiaryAccId = req.body.beneficiaryAccId;
     const amt = req.body.amt;
     res.cookie('custUserId',accId);
-    var customersql = "SELECT * FROM bank_balance where cust_accId=?";
-    db.query(customersql,[accId],(errors,result)=>{
-        if(errors) throw errors;
-        
-        const customerBalance = result[0].amt;
-        if(amt>customerBalance) res.redirect("/profile");
-        else
-        {
-            var current = new Date();
-            var day = current.getDate();
-            var month = current.getMonth()+1;
-            var year = current.getFullYear();
-            var Transctime = current.toLocaleTimeString();
 
-            const debit = "INSERT INTO debit VALUES(?,?) ";
-            db.query(debit,[amt,accId],(debitErr,debitResult)=>{
-                if(debitErr) throw debitErr;
-            })
-            const credit = "INSERT INTO credit VALUES(?,?) ";
-            db.query(credit,[amt,beneficiaryAccId],(creditErr,creditResult)=>{
-                if(creditErr) throw creditErr;
-            })
-            const time1 = "INSERT INTO time VALUES(?,?)";
-            db.query(time1,[Transctime,accId],(debitTimeErr,)=>{
-                if(debitTimeErr) throw debitTimeErr;
-            });
-            const time2 = "INSERT INTO time VALUES(?,?)";
-            db.query(time2,[Transctime,beneficiaryAccId],(creditTimeErr,)=>{
-                if(creditTimeErr) throw creditTimeErr;
-            });
-            const date1 = "INSERT INTO date VALUES(?,?) ";
-            db.query(date1,[(`${year}-${month}-${day}`),accId],(debitDateErr,debitDateRes)=>{
-                if(debitDateErr) throw debitDateErr;
-            })
-            const date2 = "INSERT INTO date VALUES(?,?) ";
-            db.query(date2,[(`${year}-${month}-${day}`),beneficiaryAccId],(debitDateErr,debitDateRes)=>{
-                if(debitDateErr) throw debitDateErr;
-            })
+    var creditCustomersql = "SELECT * FROM bank_balance where cust_accId=?";
+    db.query(creditCustomersql,[beneficiaryAccId],(creditCustomerErr,creditCustomerResults)=>{
+        if(creditCustomerErr) throw creditCustomerErr;
+        const creditCustomerBalance = creditCustomerResults[0].amt;
+        
+        var debitcustomersql = "SELECT * FROM bank_balance where cust_accId=?";
+        db.query(debitcustomersql,[accId],(errors,result)=>{
+            if(errors) throw errors;
             
-        }
+            const debitCustomerBalance = result[0].amt;
+            if(amt>debitCustomerBalance) res.redirect("/profile");
+            else
+            {
+                var current = new Date();
+                var day = current.getDate();
+                var month = current.getMonth()+1;
+                var year = current.getFullYear();
+                var Transctime = current.toLocaleTimeString();
+    
+                const debitSql = "INSERT INTO debitAmt(debit_amt, debitcustomerId, debit_time, debit_date, curBalance) VALUES (?, ?, ?, ?, ?)";
+                db.query(debitSql, [amt, accId, Transctime, `${year}-${month}-${day}`, debitCustomerBalance - amt], (debitError, Debitresults) => {
+                    if (debitError) throw debitError;
+                });
+                const creditSql = "INSERT INTO creditAmt(credit_amt, creditcustomerId, credit_time, credit_date, curBalance) VALUES (?, ?, ?, ?, ?)";
+                db.query(creditSql, [amt, beneficiaryAccId, Transctime, `${year}-${month}-${day}`, parseInt(creditCustomerBalance)+parseInt(amt),beneficiaryAccId], (creditError, creditresults) => {
+                    if (creditError) throw creditError;
+                });
+
+                var updateDebitDetails = "UPDATE bank_customer set bank_cust_balance=? WHERE bank_cust_account_id=?";
+                db.query(updateDebitDetails,[debitCustomerBalance-amt,accId],(Err,Result)=>{
+                    if(Err) throw Err;
+                    else 
+                    {
+                        var updateBankBalance = "UPDATE bank_balance SET amt=? WHERE cust_accId=?";
+                        db.query(updateBankBalance,[debitCustomerBalance-amt,accId],(debitBankBalanceErr,debitBankBalanceRes)=>{
+                            if(debitBankBalanceErr) throw debitBankBalanceErr;
+                        })
+                    }
+                })
+
+                var updateCreditDetails = "UPDATE bank_customer set bank_cust_balance=? WHERE bank_cust_account_id=?";
+                db.query(updateCreditDetails,[parseInt(creditCustomerBalance)+parseInt(amt),beneficiaryAccId],(Err,Result)=>{
+                    if(Err) throw Err;
+                    else 
+                    {
+                        var updateBankBalance = "UPDATE bank_balance SET amt=? WHERE cust_accId=?";
+                        db.query(updateBankBalance,[parseInt(creditCustomerBalance)+parseInt(amt),beneficiaryAccId],(creditBankBalanceErr,creditBankBalanceRes)=>{
+                            if(creditBankBalanceErr) throw creditBankBalanceErr;
+                        })
+                    }
+                })
+                res.redirect("/profile");
+            }
+        })
     })
 })
 

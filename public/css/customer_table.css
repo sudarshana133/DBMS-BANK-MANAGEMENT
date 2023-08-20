@@ -85,4 +85,5 @@ input{
 .image a img
 {
     width: min(40vw,70px);
+    filter: drop-shadow(2px 1px 5px black);
 }

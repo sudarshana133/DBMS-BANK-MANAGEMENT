@@ -79,8 +79,8 @@
 
       <% if(userInfo==0){ %>
         <div class="p2">
-          <a href="/transaction" class="btn" style="width: 150px;">Credit Money</a>
-          <a href="/transaction" class="btn" style="width: 150px; margin-top: 10px;">Debit Money</a>
+          <a href="/transaction?id=<%- customer[0].bank_cust_account_id %>" class="btn" style="width: 150px;">Send Money</a>
+          <a href="/epassbook?id=<%- customer[0].bank_cust_account_id %>" class="btn" style="width: 150px; margin-top: 10px;">e-passbook</a>
         </div>
       <% } %>
 

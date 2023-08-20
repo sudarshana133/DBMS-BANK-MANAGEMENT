@@ -1,0 +1,45 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 10px;
+    text-align: center;
+    margin: auto;
+    overflow-x: hidden;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+table,th,td{
+    border: 1px solid rgb(221, 221, 221);
+    border-collapse: collapse;
+    padding: 2px;
+}
+table{
+    margin-top: 30px;
+}
+.info{
+    display: none;
+}
+.image a img
+{
+    width: 85px;
+    filter: drop-shadow(2px 1px 5px black);
+    margin-top: 10px;
+}
+@media (width<550px) {
+    .hide{
+        display: none;
+    }
+    .info
+    {
+        display:block;
+    }
+}
