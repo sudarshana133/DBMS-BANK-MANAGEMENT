@@ -112,14 +112,10 @@ app.get("/transaction",(req,res)=>{
 // update the code here
 app.get("/epassbook",(req,res)=>{
     const accId = req.query.id;
-    var selectCustomerb = "SELECT * FROM debitAmt where debitcustomerId=?";
-    var selectCutomerd = "SELECT * FROM creditAmt where creditcustomerId=?";
-    db.query(selectCutomerd,[accId],(error,result)=>{
-        if(error) throw error;
-        db.query(selectCustomerb,[accId],(err,results)=>{
-            if(err) throw err;
-            res.send(result)
-        })
+    var selectCust = "SELECT * FROM transaction WHERE debitCustomerId = ? or creditCustomerId = ?";
+    db.query(selectCust,[accId,accId],(errors,transactions)=>{
+        if(errors) throw errors;
+        res.send(transactions);
     })
 })
 app.get("/:links",(req,res)=>{
@@ -326,38 +322,28 @@ app.post("/moneyTransaction",(req,res)=>{
                 var year = current.getFullYear();
                 var Transctime = current.toLocaleTimeString();
     
-                const debitSql = "INSERT INTO debitAmt(debit_amt, debitcustomerId, debit_time, debit_date, curBalance) VALUES (?, ?, ?, ?, ?)";
-                db.query(debitSql, [amt, accId, Transctime, `${year}-${month}-${day}`, debitCustomerBalance - amt], (debitError, Debitresults) => {
-                    if (debitError) throw debitError;
-                });
-                const creditSql = "INSERT INTO creditAmt(credit_amt, creditcustomerId, credit_time, credit_date, curBalance) VALUES (?, ?, ?, ?, ?)";
-                db.query(creditSql, [amt, beneficiaryAccId, Transctime, `${year}-${month}-${day}`, parseInt(creditCustomerBalance)+parseInt(amt),beneficiaryAccId], (creditError, creditresults) => {
-                    if (creditError) throw creditError;
-                });
-
-                var updateDebitDetails = "UPDATE bank_customer set bank_cust_balance=? WHERE bank_cust_account_id=?";
-                db.query(updateDebitDetails,[debitCustomerBalance-amt,accId],(Err,Result)=>{
-                    if(Err) throw Err;
-                    else 
-                    {
-                        var updateBankBalance = "UPDATE bank_balance SET amt=? WHERE cust_accId=?";
-                        db.query(updateBankBalance,[debitCustomerBalance-amt,accId],(debitBankBalanceErr,debitBankBalanceRes)=>{
-                            if(debitBankBalanceErr) throw debitBankBalanceErr;
-                        })
-                    }
+                var transactionSql = "INSERT INTO transaction values(?,?,?,?,?,?,?)";
+                db.query(transactionSql,[amt,accId,beneficiaryAccId,Transctime,`${year}-${month}-${day}`,parseInt(creditCustomerBalance)+parseInt(amt),parseInt(debitCustomerBalance)-parseInt(amt)],(errors,result)=>{
+                    if(errors) throw errors;
                 })
+                var updatedebitCustBalance = "UPDATE bank_customer SET bank_cust_balance = ? WHERE bank_cust_account_id=?";
+                db.query(updatedebitCustBalance,[debitCustomerBalance-amt,accId],(error,results)=>{
+                    if(error) throw error;
 
-                var updateCreditDetails = "UPDATE bank_customer set bank_cust_balance=? WHERE bank_cust_account_id=?";
-                db.query(updateCreditDetails,[parseInt(creditCustomerBalance)+parseInt(amt),beneficiaryAccId],(Err,Result)=>{
-                    if(Err) throw Err;
-                    else 
-                    {
-                        var updateBankBalance = "UPDATE bank_balance SET amt=? WHERE cust_accId=?";
-                        db.query(updateBankBalance,[parseInt(creditCustomerBalance)+parseInt(amt),beneficiaryAccId],(creditBankBalanceErr,creditBankBalanceRes)=>{
-                            if(creditBankBalanceErr) throw creditBankBalanceErr;
-                        })
-                    }
+                    var updateBalanceSql = "UPDATE bank_balance SET amt = ? WHERE cust_accId = ?";
+                    db.query(updateBalanceSql,[debitCustomerBalance-amt,accId],(errors,resultFound)=>{
+                        if(errors) throw errors;
+                    })
                 })
+                const updateCreditCustBalance = "UPDATE bank_customer SET bank_cust_balance = ? WHERE bank_cust_account_id = ?";
+                db.query(updateCreditCustBalance, [parseInt(creditCustomerBalance) + parseInt(amt), beneficiaryAccId], (error, resultUpdate) => {
+                    if (error) throw error;
+
+                    const updateBalanceSql = "UPDATE bank_balance SET amt = ? WHERE cust_accId = ?";
+                    db.query(updateBalanceSql, [parseInt(creditCustomerBalance) + parseInt(amt), beneficiaryAccId], (errorBalance, resultBalance) => {
+                        if (errorBalance) throw errorBalance;
+                    });
+                });
                 res.redirect("/profile");
             }
         })
