@@ -132,8 +132,7 @@ app.get("/transaction",(req,res)=>{
 app.get("/epassbook", (req, res) => {
     const accId = req.query.id;
 
-    const selectTransactions = `SELECT * FROM transaction WHERE debitcustomerId = ? OR creditcustomerId = ? ORDER BY time desc`;
-
+    const selectTransactions = `SELECT * FROM transaction WHERE debitcustomerId = ? OR creditcustomerId = ? order by date desc,time desc`;
     db.query(selectTransactions, [accId, accId], (error, transactions) => {
         if (error) {
             throw error;
@@ -301,10 +300,12 @@ app.post("/creditMoney", (req, res) => {
                 const day = current.getDate();
                 const month = current.getMonth() + 1;
                 const year = current.getFullYear();
-                const Transctime = current.toLocaleTimeString();
+                var hours= current.getHours();
+                var minutes = current.getMinutes();
+                var seconds = current.getSeconds();
 
                 const transactionSql = "INSERT INTO transaction(amt, creditcustomerId, time, date, creditCurBalance) VALUES (?, ?, ?, ?, ?)";
-                db.query(transactionSql, [amt, id, Transctime, `${year}-${month}-${day}`, currentBalance + amt], (transactionError, transactionResult) => {
+                db.query(transactionSql, [amt, id, `${hours}:${minutes}:${seconds}`, `${year}-${month}-${day}`, currentBalance + amt], (transactionError, transactionResult) => {
                     if (transactionError) throw transactionError;
                     
                     res.redirect("/profileViewAdmin");
@@ -340,10 +341,12 @@ app.post("/debitMoney", (req, res) => {
                     const day = current.getDate();
                     const month = current.getMonth() + 1;
                     const year = current.getFullYear();
-                    const Transctime = current.toLocaleTimeString();
+                    var hours= current.getHours();
+                    var minutes = current.getMinutes();
+                    var seconds = current.getSeconds();
 
                     const transactionSql = "INSERT INTO transaction(amt, debitcustomerId, time, date, debitCurBalance) VALUES (?, ?, ?, ?, ?)";
-                    db.query(transactionSql, [amt, id, Transctime, `${year}-${month}-${day}`, amtPresent - amt], (transactionError, transactionResult) => {
+                    db.query(transactionSql, [amt, id, `${hours}:${minutes}:${seconds}`, `${year}-${month}-${day}`, amtPresent - amt], (transactionError, transactionResult) => {
                         if (transactionError) throw transactionError;
 
                         res.redirect("/profileViewAdmin");
@@ -386,10 +389,11 @@ app.post("/moneyTransaction",(req,res)=>{
                         var day = current.getDate();
                         var month = current.getMonth()+1;
                         var year = current.getFullYear();
-                        var Transctime = current.toLocaleTimeString();
-            
+                        var hours= current.getHours();
+                        var minutes = current.getMinutes();
+                        var seconds = current.getSeconds();
                         var transactionSql = "INSERT INTO transaction(amt,debitcustomerId,creditcustomerId,time,date,creditCurBalance,debitCurBalance) values(?,?,?,?,?,?,?)";
-                        db.query(transactionSql,[amt,accId,beneficiaryAccId,Transctime,`${year}-${month}-${day}`,parseInt(creditCustomerBalance)+parseInt(amt),parseInt(debitCustomerBalance)-parseInt(amt)],(errors,result)=>{
+                        db.query(transactionSql,[amt,accId,beneficiaryAccId,`${hours}:${minutes}:${seconds}`,`${year}-${month}-${day}`,parseInt(creditCustomerBalance)+parseInt(amt),parseInt(debitCustomerBalance)-parseInt(amt)],(errors,result)=>{
                             if(errors) throw errors;
                         })
                         var updatedebitCustBalance = "UPDATE bank_customer SET bank_cust_balance = ? WHERE bank_cust_account_id=?";

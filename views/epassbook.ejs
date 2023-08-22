@@ -31,7 +31,7 @@
         <% if (transactions.length > 0) { %>
             <% transactions.forEach(transaction => { %>
                 <tr>
-                    <td class="hide"><%- transaction.date.toISOString().substr(0, 10) %></td>
+                    <td class="hide"><%- transaction.date.toString().substr(0,15) %></td>
                     <td class="hide">
                         <% if (transaction.debitcustomerId === parseInt(accId)) { %>
                             Debit
@@ -54,9 +54,9 @@
                         <% } else if (transaction.creditcustomerId === null && transaction.debitcustomerId === parseInt(accId)) { %>
                             CASH WITHDRAWAL
                         <% } else if (transaction.debitcustomerId === parseInt(accId)) { %>
-                            Credited Account ID: <%- transaction.creditcustomerId %>
+                            Amount Credited to: <%- transaction.creditcustomerId %>
                         <% } else if (transaction.creditcustomerId === parseInt(accId)) { %>
-                            Debited Account ID: <%- transaction.debitcustomerId %>
+                            Amount debited from: <%- transaction.debitcustomerId %>
                         <% } %>
                     </td>
                 </tr>
